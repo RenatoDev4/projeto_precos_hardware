@@ -1,0 +1,50 @@
+<div class="filtros_formulario placadevideo">
+    <h3>Filtros</h3>
+    <br/>
+    <form method='get' action='.'>
+      <h5>Selecione um modelo:</h5>
+      <select id="select-modelo" name="select-modelo">
+      <optgroup label="Nvidia">
+        <option value="RTX 4090">RTX 4090</option>
+        <option value="RTX 4080">RTX 4080</option>
+        <option value="RTX 4070ti">RTX 4070ti</option>
+        <option value="RTX 3090ti">RTX 3090ti</option>
+        <option value="RTX 3090">RTX 3090</option>
+        <option value="RTX 3080ti">RTX 3080ti</option>
+        <option value="RTX 3080">RTX 3080</option>
+        <option value="RTX 3070">RTX 3070</option>
+        <option value="RTX 3070ti">RTX 3070ti</option>
+        <option value="RTX 3060ti">RTX 3060ti</option>
+        <option value="RTX 3060">RTX 3060</option>
+        <option value="RTX 3050">RTX 3050</option>
+        <option value="RTX 2060">RTX 2060/Super</option>
+        <option value="GTX 1660">GTX 1660/Super/Ti</option>
+        <option value="GTX 1650">GTX 1650</option>
+      </optgroup>
+    </select>
+    <button type='submit'>Filtrar</button>
+  </form>
+  </div>
+    
+<div id="tabela-de-dados"></div>
+<table>
+  <thead>
+      <tr>
+          <th>Marca</th>
+          <th>Loja</th>
+          <th>Preço</th>
+          <th>Valor do preço a prazo</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for resultado in resultados %}
+      <tr>
+          <td><a href="{{ resultado.url_marca }}">{{ resultado.marca }}</a></td>
+          <td>{{ resultado.loja }}</td>
+          <td>R$ {{ resultado.preco|floatformat:2 }}</td>
+          <td>R$ {{ resultado.valor_preco_prazo|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+  </tbody>
+</table>
+</div>

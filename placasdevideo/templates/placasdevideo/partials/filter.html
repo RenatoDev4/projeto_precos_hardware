@@ -3,28 +3,49 @@
     <br/>
     <form method='get' action='.'>
       <h5>Selecione um modelo:</h5>
-      <select id="select-modelo" name="select-modelo">
+      <select id="select-modelo" name="select-modelo" >
       <optgroup label="Nvidia">
         <option value="RTX 4090">RTX 4090</option>
         <option value="RTX 4080">RTX 4080</option>
-        <option value="RTX 4070ti">RTX 4070ti</option>
-        <option value="RTX 3090ti">RTX 3090ti</option>
+        <option value="RTX 4070 ti">RTX 4070ti</option>
+        <option value="RTX 4070">RTX 4070</option>
+        <option value="RTX 3090 ti">RTX 3090ti</option>
         <option value="RTX 3090">RTX 3090</option>
-        <option value="RTX 3080ti">RTX 3080ti</option>
+        <option value="RTX 3080 ti">RTX 3080ti</option>
         <option value="RTX 3080">RTX 3080</option>
         <option value="RTX 3070">RTX 3070</option>
-        <option value="RTX 3070ti">RTX 3070ti</option>
-        <option value="RTX 3060ti">RTX 3060ti</option>
+        <option value="RTX 3070 ti">RTX 3070ti</option>
+        <option value="RTX 3060 ti">RTX 3060ti</option>
         <option value="RTX 3060">RTX 3060</option>
         <option value="RTX 3050">RTX 3050</option>
-        <option value="RTX 2060">RTX 2060/Super</option>
+        <option value="RTX 2060">RTX 2060</option>
         <option value="GTX 1660">GTX 1660/Super/Ti</option>
         <option value="GTX 1650">GTX 1650</option>
+        <option value="GTX 1630">GTX 1630</option>
+      <optgroup label="AMD">
+        <option value="RX 7900 XT">RX 7900XT/XTX</option>
+        <option value="RX 6900 XT">RX 6900/50XT</option>
+        <option value="RX 6800">RX 6800/XT</option>
+        <option value="RX 6750 XT">RX 6750XT</option>
+        <option value="RX 6700 XT">RX 6700XT</option>
+        <option value="RX 6650 XT">RX 6650XT</option>
+        <option value="RX 6600">RX 6600/XT</option>
+        <option value="RX 6500 XT">RX 6500XT</option>
+        <option value="RX 6400">RX 6400</option>
       </optgroup>
     </select>
+    <br/>
+    <br/>
+    <h5>Selecione uma loja:</h5>
+    <select id="select-loja" name="select-loja">
+        <option value="">Todas as lojas</option>
+        <option value="Kabum">KabuM</option>
+        <option value="Pichau">Pichau</option>
+    </select>
+    <br/><br/>
     <button type='submit'>Filtrar</button>
-  </form>
-  </div>
+</form>
+</div>
     
 <div id="tabela-de-dados"></div>
 <table>

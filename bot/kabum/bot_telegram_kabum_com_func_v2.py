@@ -102,15 +102,25 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
+
                 cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
                                 (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                 result = cursor.fetchone()
+
                 if result is None:
+                    # The product does not exist in the table, so insert the product with the current price # noqa
                     if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                            marca, preco, url_marca, loja, valor_preco_prazo))
                         connection.commit()
-                        cursor.close()
+                else:
+                    # The product already exists in the table, so update the fields if there are changes # noqa
+                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                            preco, url_marca, valor_preco_prazo, marca, loja))
+                        connection.commit()
+
+            cursor.close()
 
             # Product model message and save in specific directory
             message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco} \n<b>Preço a prazo:</b> {preco2} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa

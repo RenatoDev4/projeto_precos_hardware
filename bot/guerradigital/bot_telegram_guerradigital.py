@@ -1,4 +1,3 @@
-import math
 import os
 import pickle
 import re
@@ -16,10 +15,10 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
-# Function Web Scraping gabigames.com.br
+# Function Web Scraping guerradigital.com.br
 
 
-def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
+def web_scraping_guerradigital(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -33,7 +32,7 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
     # Inform that it is a navigator and save message
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
+              AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/109.0.0.0 Safari/537.36"}
     if os.path.exists(sent_message_file):
         with open(sent_message_file, "rb") as f:
@@ -46,67 +45,63 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
     soup = BeautifulSoup(site.content, 'html.parser')
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
+    produto = soup.find_all('div', class_=re.compile('col'))
 
-    produto = soup.find_all(
-        'div', class_='MuiGrid-root')
-
-    urls_visitadas = []
     for produto in produto:
-        # Verifica se a URL já foi visitada
-        url_elemento = produto.find('a')
-        if url_elemento is None:
-            continue
-        url = url_elemento['href']
-        if url in urls_visitadas:
-            continue
-        urls_visitadas.append(url)
-        # Get product names
-        marca = produto.find(
-            'h2', class_='MuiTypography-root jss76 jss77 MuiTypography-h6')
+
+        # Get product name
+        marca = produto.find('div', class_=re.compile(
+            'js-item-name item-name mb-3'))
         if marca is not None:
             marca = marca.get_text().strip()
         else:
             continue
 
+        # Get URL's of products
+        url_marca = produto.find('div', class_=re.compile('item-image'))
+        tag_a = url_marca.find('a')
+        url_completa = tag_a['href']
+
+        produto_site = requests.get(url_completa, headers=headers)
+        produto_soup = BeautifulSoup(produto_site.content, 'html.parser')
+
+        # Check if product is in stock
+        if produto_soup.find('input', class_=re.compile('js-addtocart js-prod-submit-form btn btn-primary btn-block mb-4 nostock')) is not None:
+            continue
+
         # Get product price (cash)
-        preco = produto.find('div', class_='jss79')
+        preco = produto_soup.find('h2', {'id': 'price_display'})
         if preco is not None:
-            preco = preco.get_text().strip().replace('R$', '')  # remove 'R$' symbol
+            preco = preco.get_text().strip()
         else:
-            preco = '0.0'
-        # remove all dots from the string
-        preco_sem_pontos = preco.replace('.', '')
-        valor_preco_avista_str = preco_sem_pontos.replace(
-            ',', '.')  # replace comma with dot
-        # divide by 100 to convert to float
-        valor_preco_avista = float(valor_preco_avista_str) * 1000
+            preco = 0.0
+        valor_preco_avista_str = re.sub(
+            r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
+        valor_preco_avista = float(valor_preco_avista_str)
 
         # Variable exclusive to 'message' to be sent to telegram
         preco_cash_msg = preco
 
         # Get product price (credit card)
-        preco2 = produto.find('div', class_='jss87')
+        preco2 = produto_soup.find(
+            'span', {'class': 'js-installment-price installment-price'})
         if preco2 is not None:
-            preco2 = preco2.get_text().strip().replace('R$', '')  # remove 'R$' symbol
+            preco2 = preco2.get_text().strip()
         else:
-            preco2 = '0.0'
-        # remove all dots from the string
-        preco2_sem_pontos = preco2.replace('.', '')
-        valor_preco_prazo_str = preco2_sem_pontos.replace(
-            ',', '.')  # replace comma with dot
-        # divide by 100 to convert to float
-        valor_preco_prazo = float(valor_preco_prazo_str) * 1000
+            preco2 = 0.0
+        valor_preco_prazo_str = re.sub(
+            r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
+        valor_preco_prazo = float(valor_preco_prazo_str) * 12
 
         # Variable exclusive to 'message' to be sent to telegram
-        preco_card_msg = preco2.strip()
-
-        url = produto.find('a')['href']
-        url_marca = 'https://www.pichau.com.br' + url
+        preco_card_msg_str = valor_preco_prazo
+        preco_card_msg = "R${:.2f}".format(
+            preco_card_msg_str).replace('.', ',')
 
         # Add data to dictionary
         dic_produtos['marca'].append(marca)
         dic_produtos['preco'].append(valor_preco_avista)
-        dic_produtos['url_marca'].append(url_marca)
+        dic_produtos['url_marca'].append(url_completa)
         dic_produtos['loja'].append(loja)
         dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
 
@@ -121,33 +116,23 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
             url_marca = dic_produtos['url_marca'][i]
             loja = dic_produtos['loja'][i]
             valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-
             cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
                             (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
             result = cursor.fetchone()
-
             if result is None:
-                # The product does not exist in the table, so insert the product with the current price # noqa
                 if preco != 0:
-                    cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                        marca, preco, url_marca, loja, valor_preco_prazo))
+                    cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
+                                    (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                     connection.commit()
-            else:
-                # The product already exists in the table, so update the fields if there are changes # noqa
-                if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                    cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                        preco, url_marca, valor_preco_prazo, marca, loja))
-                    connection.commit()
-
-        cursor.close()
+                    cursor.close()
 
         # Product model message and save in specific directory
-        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R${preco_cash_msg} \n<b>Preço a prazo:</b> R${preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # type: ignore # noqa
+        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco_cash_msg} \n<b>Preço a prazo:</b> {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa
         sent_messages_file = ROOT_DIR_MESSAGES / \
             'messages_telegram' / sent_message_file
 
         # Condictions to send message (VGA Model, Price, etc)
-        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # noqa
+        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
             send_message(message, sent_messages_file)
 
 

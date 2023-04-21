@@ -15,53 +15,55 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.gkinfostore.com.br/geforce-rtx-4090'
-loja = 'GKInfoStore'
+url_pag = 'https://www.inpower.com.br/hardware/placas-de-video'
+loja = 'Inpower'
 
 # Database configuration
 DB_NAME = 'db.sqlite3'
 DB_FILE = DB_NAME
-
 
 # Begin web scraping
 site = requests.get(url_pag, headers=headers)
 soup = BeautifulSoup(site.content, 'html.parser')
 dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
 ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
-produto = soup.find_all('div', class_=re.compile(
-    'listagem-item'))
-print(produto)
+
+produto = soup.find_all('li', class_=re.compile('^product-'))
 
 for produto in produto:
-    marca = produto.find('a', class_=re.compile('produto-sobrepor'))['title']
-
-    # Get URL's of products
-    url_marca = produto.find('a', class_=re.compile('produto-sobrepor'))['href']  # noqa
-
-    produto_site = requests.get(url_marca, headers=headers)
-    produto_soup = BeautifulSoup(produto_site.content, 'html.parser')
-
-    # Check if product is available
-    if produto_soup.find('meta', itemprop='availability')['content'] == 'http://schema.org/OutOfStock':  # type: ignore # noqa
+    # Get product name
+    marca = produto.find('div', class_=re.compile(
+        'wd-product-line in-stock'))
+    if marca is not None:
+        marca = marca['data-name']
+    else:
         continue
 
+    # Get URL's of products
+    url_marca = 'https://www.inpower.com.br' + produto.find('a', class_=re.compile(  # noqa
+        'thumb'))['href']
+
     # Get product price (cash)
-    preco = produto_soup.find('span', class_='desconto-a-vista').text.strip()
+    preco = produto.find('span', class_=re.compile(
+        'instant-price')).get_text().strip()
     valor_preco_avista_str = re.sub(
         r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
     valor_preco_avista = float(valor_preco_avista_str)
 
     # Variable exclusive to 'message' to be sent to telegram
-    preco_cash_msg = preco.replace('via Pix', '').replace(
-        'ou', '').replace(' ', '').replace('\n', '')
+    preco_cash_msg = preco
 
-    # Get produtct price (credit card)
-    preco2 = produto_soup.find(
-        'strong', class_='preco-promocional cor-principal').text.strip()
-    preco_card_msg = preco2.replace(' ', '')
-    valor_preco_prazo_str = re.sub(
-        r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
-    valor_preco_prazo = float(valor_preco_prazo_str)
+    # Get product price (credit card)
+    preco2_str = produto.find(
+        'b', class_='parcel-value').get_text().strip()
+    preco2_str = preco2_str.replace('R$', '')
+    preco2_str = preco2_str.replace('.', '')
+    preco2 = float(preco2_str.replace(',', '.'))
+    valor_preco_prazo = preco2 * 12
+
+    # Variable exclusive to 'message' to be sent to telegram
+    preco_card_msg = 'R$ {:,.2f}'.format(valor_preco_prazo).replace(
+        ',', 'v').replace('.', ',').replace('v', '.')
 
     # Add data to dictionary
     dic_produtos['marca'].append(marca)
@@ -91,4 +93,4 @@ for produto in produto:
                 connection.commit()
                 cursor.close()
 
-    print(dic_produtos)
+    print(marca, preco_cash_msg, preco_card_msg)

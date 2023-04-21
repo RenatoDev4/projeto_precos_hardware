@@ -15,53 +15,59 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.gkinfostore.com.br/geforce-rtx-4090'
-loja = 'GKInfoStore'
+url_pag = 'https://www.gabigames.gg/hardware/placas-de-video?loja=1177600&categoria=15&variants%5B%5D=Modelo%2BPlaca%2Bde%2BVideo%7C%7CRTX%2B40'
+loja = 'Gabi Games'
 
 # Database configuration
 DB_NAME = 'db.sqlite3'
 DB_FILE = DB_NAME
-
 
 # Begin web scraping
 site = requests.get(url_pag, headers=headers)
 soup = BeautifulSoup(site.content, 'html.parser')
 dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
 ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
-produto = soup.find_all('div', class_=re.compile(
-    'listagem-item'))
-print(produto)
+produto = soup.find_all('div', class_=re.compile('product-body'))
 
 for produto in produto:
-    marca = produto.find('a', class_=re.compile('produto-sobrepor'))['title']
-
-    # Get URL's of products
-    url_marca = produto.find('a', class_=re.compile('produto-sobrepor'))['href']  # noqa
-
-    produto_site = requests.get(url_marca, headers=headers)
-    produto_soup = BeautifulSoup(produto_site.content, 'html.parser')
-
-    # Check if product is available
-    if produto_soup.find('meta', itemprop='availability')['content'] == 'http://schema.org/OutOfStock':  # type: ignore # noqa
+    # Get product names
+    marca = produto.find('div', class_='product-name')
+    if marca is not None:
+        marca = marca.get_text().strip()
+    else:
         continue
 
     # Get product price (cash)
-    preco = produto_soup.find('span', class_='desconto-a-vista').text.strip()
+    preco = produto.find(
+        'span', class_='preco-avista precoAvista')
+    if preco is not None:
+        preco = preco.get_text().strip()
+    else:
+        preco = 0.0
     valor_preco_avista_str = re.sub(
         r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
     valor_preco_avista = float(valor_preco_avista_str)
 
     # Variable exclusive to 'message' to be sent to telegram
-    preco_cash_msg = preco.replace('via Pix', '').replace(
-        'ou', '').replace(' ', '').replace('\n', '')
+    preco_cash_msg = preco.replace(' ', '').replace('\n', '')  # type: ignore
 
-    # Get produtct price (credit card)
-    preco2 = produto_soup.find(
-        'strong', class_='preco-promocional cor-principal').text.strip()
-    preco_card_msg = preco2.replace(' ', '')
+    # Get product price (credit card)
+    preco2 = produto.find('span', class_='current-price')
+    if preco2 is not None:
+        preco2 = preco2.get_text().strip()
+    else:
+        preco2 = 0.0
     valor_preco_prazo_str = re.sub(
         r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
     valor_preco_prazo = float(valor_preco_prazo_str)
+
+    print(marca, preco, preco2)
+
+    # Variable exclusive to 'message' to be sent to telegram
+    preco_card_msg = preco2.replace(' ', '')  # type: ignore
+
+    # Get URL's of products
+    url_marca = produto.find('a', class_=re.compile('product-info'))['href']
 
     # Add data to dictionary
     dic_produtos['marca'].append(marca)
@@ -90,5 +96,3 @@ for produto in produto:
                                 (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                 connection.commit()
                 cursor.close()
-
-    print(dic_produtos)

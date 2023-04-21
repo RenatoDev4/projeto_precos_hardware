@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <div class="filtros_formulario placadevideo">
     <h3>Filtros</h3>
     <br/>
@@ -62,10 +64,9 @@
       <tr>
           <td><a href="{{ resultado.url_marca }}">{{ resultado.marca }}</a></td>
           <td>{{ resultado.loja }}</td>
-          <td>R$ {{ resultado.preco|floatformat:2 }}</td>
-          <td>R$ {{ resultado.valor_preco_prazo|floatformat:2 }}</td>
+          <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+          <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
       </tr>
       {% endfor %}
   </tbody>
 </table>
-</div>

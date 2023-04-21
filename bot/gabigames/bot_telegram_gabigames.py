@@ -1,4 +1,3 @@
-import math
 import os
 import pickle
 import re
@@ -19,7 +18,7 @@ sent_messages_file = ''
 # Function Web Scraping gabigames.com.br
 
 
-def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
+def web_scraping_gabigames(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -33,7 +32,7 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
     # Inform that it is a navigator and save message
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
+              AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/109.0.0.0 Safari/537.36"}
     if os.path.exists(sent_message_file):
         with open(sent_message_file, "rb") as f:
@@ -46,62 +45,46 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
     soup = BeautifulSoup(site.content, 'html.parser')
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
+    produto = soup.find_all('div', class_=re.compile('product-body'))
 
-    produto = soup.find_all(
-        'div', class_='MuiGrid-root')
-
-    urls_visitadas = []
     for produto in produto:
-        # Verifica se a URL já foi visitada
-        url_elemento = produto.find('a')
-        if url_elemento is None:
-            continue
-        url = url_elemento['href']
-        if url in urls_visitadas:
-            continue
-        urls_visitadas.append(url)
         # Get product names
-        marca = produto.find(
-            'h2', class_='MuiTypography-root jss76 jss77 MuiTypography-h6')
+        marca = produto.find('div', class_='product-name')
         if marca is not None:
             marca = marca.get_text().strip()
         else:
             continue
 
         # Get product price (cash)
-        preco = produto.find('div', class_='jss79')
+        preco = produto.find(
+            'span', class_='preco-avista precoAvista')
         if preco is not None:
-            preco = preco.get_text().strip().replace('R$', '')  # remove 'R$' symbol
+            preco = preco.get_text().strip()
         else:
-            preco = '0.0'
-        # remove all dots from the string
-        preco_sem_pontos = preco.replace('.', '')
-        valor_preco_avista_str = preco_sem_pontos.replace(
-            ',', '.')  # replace comma with dot
-        # divide by 100 to convert to float
-        valor_preco_avista = float(valor_preco_avista_str) * 1000
+            preco = 0.0
+        valor_preco_avista_str = re.sub(
+            r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
+        valor_preco_avista = float(valor_preco_avista_str)
 
         # Variable exclusive to 'message' to be sent to telegram
-        preco_cash_msg = preco
+        preco_cash_msg = preco.replace(
+            ' ', '').replace('\n', '')  # type: ignore
 
         # Get product price (credit card)
-        preco2 = produto.find('div', class_='jss87')
+        preco2 = produto.find('span', class_='current-price')
         if preco2 is not None:
-            preco2 = preco2.get_text().strip().replace('R$', '')  # remove 'R$' symbol
+            preco2 = preco2.get_text().strip()
         else:
-            preco2 = '0.0'
-        # remove all dots from the string
-        preco2_sem_pontos = preco2.replace('.', '')
-        valor_preco_prazo_str = preco2_sem_pontos.replace(
-            ',', '.')  # replace comma with dot
-        # divide by 100 to convert to float
-        valor_preco_prazo = float(valor_preco_prazo_str) * 1000
+            preco2 = 0.0
+        valor_preco_prazo_str = re.sub(
+            r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
+        valor_preco_prazo = float(valor_preco_prazo_str)
 
         # Variable exclusive to 'message' to be sent to telegram
-        preco_card_msg = preco2.strip()
+        preco_card_msg = preco2.replace(' ', '')  # type: ignore
 
-        url = produto.find('a')['href']
-        url_marca = 'https://www.pichau.com.br' + url
+        # Get URL's of products
+        url_marca = produto.find('a', class_=re.compile('product-info'))['href']
 
         # Add data to dictionary
         dic_produtos['marca'].append(marca)
@@ -142,12 +125,12 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
         cursor.close()
 
         # Product model message and save in specific directory
-        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R${preco_cash_msg} \n<b>Preço a prazo:</b> R${preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # type: ignore # noqa
+        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {preco_cash_msg} \n<b>Preço a prazo:</b> R$ {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa
         sent_messages_file = ROOT_DIR_MESSAGES / \
             'messages_telegram' / sent_message_file
 
         # Condictions to send message (VGA Model, Price, etc)
-        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # noqa
+        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
             send_message(message, sent_messages_file)
 
 

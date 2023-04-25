@@ -15,7 +15,7 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
-# Function Web Scraping alligatorshop.com.br
+# Function Web Scraping itxpower.com.br
 
 
 def web_scraping_itxpower(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
@@ -43,14 +43,14 @@ def web_scraping_itxpower(placa, loja, sent_message_file, url_pag, price_sent_ms
     # Begin web scraping
     site = requests.get(url_pag, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
-    dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
+    dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
     produto = soup.find_all('div', class_=re.compile(
         'col-6 col-sm-6 col-md-4 col-lg-4 mb-4'))
 
     for produto in produto:
         # Get product name
-        marca = produto.find('h2', class_=re.compile('text')).get_text().strip()
+        marca = produto.find('h2', class_=re.compile('text')).get_text().strip()  # noqa
 
         # Get product price (cash)
         preco_vista = produto.find('div', class_='billet')
@@ -110,18 +110,18 @@ def web_scraping_itxpower(placa, loja, sent_message_file, url_pag, price_sent_ms
             loja = dic_produtos['loja'][i]
             valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
 
-            cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                            (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+            cursor.execute(
+                "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
             result = cursor.fetchone()
 
             if result is None:
-                # The product does not exist in the table, so insert the product with the current price # noqa
+                # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                 if preco != 0:
                     cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
                         marca, preco, url_marca, loja, valor_preco_prazo))
                     connection.commit()
             else:
-                # The product already exists in the table, so update the fields if there are changes # noqa
+                # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
                 if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
                     cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
                         preco, url_marca, valor_preco_prazo, marca, loja))

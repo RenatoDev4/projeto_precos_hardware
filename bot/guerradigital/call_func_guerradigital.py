@@ -1,5 +1,8 @@
 from bot_telegram_guerradigital import web_scraping_guerradigital
 
+URL_BASE_NVIDIA = 'https://www.guerradigital.com.br/hardware/placa-de-video/nvidia-geforce/?mpage=6'  # noqa
+URB_BASE_AMD = 'https://www.guerradigital.com.br/hardware/placa-de-video/amd-radeon/'  # noqa
+
 # RTX 4xxx
 # web_scraping_guerradigital('RTX 4090', 'GKInfoStore', 'gkinfostore_RTX4090.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/rtx-4090?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIFJUWCBTw6lyaWUgNDAiOlsiUlRYIDQwOTAiXX0=&sort=most_searched', 12000)  # noqa
@@ -8,7 +11,7 @@ from bot_telegram_guerradigital import web_scraping_guerradigital
 #                    'https://www.fgtec.com.br/produtos?q=rtx+4080', 8750)  # noqa
 
 web_scraping_guerradigital('RTX 4070 Ti', 'Guerra Digital', 'guerradigital_RTX4070ti.pickle',  # noqa
-                   'https://www.guerradigital.com.br/search/?q=RTX+4070+Ti', 6000)  # noqa
+                   URL_BASE_NVIDIA, 100)  # noqa
 
 # web_scraping_guerradigital('RTX 4070', 'GKInfoStore', 'gkinfostore_RTX4070.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/rtx-4070?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIFJUWCBTw6lyaWUgNDAiOlsiUlRYIDQwNzAiLCJSVFggNDA3MCBFWCJdfQ==&sort=most_searched', 6750)  # noqa
@@ -59,8 +62,8 @@ web_scraping_guerradigital('RTX 4070 Ti', 'Guerra Digital', 'guerradigital_RTX40
 
 # AMD RADEON 7xxx and 6xxx
 
-# web_scraping_guerradigital('RX 7900 XT', 'GKInfoStore', 'gkinfostore_RX7900.pickle',  # noqa
-#                    'https://www.kabum.com.br/busca/rx-7900?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNzkwMCIsIlJYIDc5MDAgWFQiXX0=&sort=most_searched', 7200)  # noqa
+web_scraping_guerradigital('RX 7900 XT', 'GKInfoStore', 'gkinfostore_RX7900.pickle',  # noqa
+                   'https://www.guerradigital.com.br/hardware/placa-de-video/amd-radeon/', 100)  # noqa
 
 # web_scraping_guerradigital('RX 6900 XT', 'GKInfoStore', 'gkinfostore_RX6900XT.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RX-6900-XT?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjkwMCBYVCJdfQ==&sort=most_searched', 5700)  # noqa

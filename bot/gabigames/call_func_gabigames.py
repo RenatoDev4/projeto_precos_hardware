@@ -1,8 +1,8 @@
 from bot_telegram_gabigames import web_scraping_gabigames
 
-LINK_RTX_4xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+4090'
-LINK_RTX_3xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+3090&categories%5B%5D=Placas%2Bde%2BV%25EDdeo'
-LINK_GTX_16xx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=GTX+1650'
+LINK_RTX_4xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+4090'  # noqa
+LINK_RTX_3xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+3090&categories%5B%5D=Placas%2Bde%2BV%25EDdeo'  # noqa
+LINK_GTX_16xx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=GTX+1650'  # noqa
 
 # RTX 4xxx
 web_scraping_gabigames('RTX 4090', 'Gabi Games', 'gabigames_RTX4090.pickle',

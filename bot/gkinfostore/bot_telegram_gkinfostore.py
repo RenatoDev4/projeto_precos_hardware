@@ -15,7 +15,7 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
-# Function Web Scraping alligatorshop.com.br
+# Function Web Scraping gkinfostore.com.br
 
 
 def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
@@ -43,7 +43,7 @@ def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent
         # Begin web scraping
         site = requests.get(url_pag, headers=headers)
         soup = BeautifulSoup(site.content, 'html.parser')
-        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
+        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
         ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
         produto = soup.find_all('div', class_=re.compile(
             'listagem-item'))
@@ -65,7 +65,7 @@ def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent
 
             # Get product price (cash)
             preco = produto_soup.find(
-                'span', class_='desconto-a-vista').text.strip()
+                'span', class_='desconto-a-vista').text.strip()  # type: ignore
             valor_preco_avista_str = re.sub(
                 r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
             valor_preco_avista = float(valor_preco_avista_str)
@@ -76,7 +76,7 @@ def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent
 
             # Get produtct price (credit card)
             preco2 = produto_soup.find(
-                'strong', class_='preco-promocional cor-principal').text.strip()
+                'strong', class_='preco-promocional cor-principal').text.strip()  # type: ignore # noqa
             preco_card_msg = preco2.replace(' ', '')
             valor_preco_prazo_str = re.sub(
                 r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
@@ -100,15 +100,25 @@ def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-                cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                                (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+
+                cursor.execute(
+                    "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                 result = cursor.fetchone()
+
                 if result is None:
+                    # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                     if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                            marca, preco, url_marca, loja, valor_preco_prazo))
                         connection.commit()
-                        cursor.close()
+                else:
+                    # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                            preco, url_marca, valor_preco_prazo, marca, loja))
+                        connection.commit()
+
+            cursor.close()
 
             # Product model message and save in specific directory
             message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {preco_cash_msg} \n<b>Preço a prazo:</b> R$ {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa

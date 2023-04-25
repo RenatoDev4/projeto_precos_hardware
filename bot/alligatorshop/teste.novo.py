@@ -49,18 +49,20 @@ for produto in produto:
     valor_preco_avista = float(valor_preco_avista_str)
 
     # Get produtct price (credit card)
-    preco2 = produto.find('div', class_=re.compile(
-        'creditcard'))
-    valor_preco_prazo = preco2.find('span', class_='price total')
-    if valor_preco_prazo is not None:
-        valor_preco_prazo = valor_preco_prazo.get_text().strip()
+    preco2 = produto.find('div', class_=re.compile('creditcard'))
+    if preco2 is not None:
+        valor_preco_prazo_tag = preco2.find('span', class_='price total')
+        valor_preco_prazo = valor_preco_prazo_tag.get_text(
+        ).strip() if valor_preco_prazo_tag is not None else None
     else:
-        valor_preco_prazo = 0.0
+        valor_preco_prazo = None
 
-    valor_preco_prazo_str_msg = valor_preco_prazo
-    valor_preco_prazo_str = re.sub(
-        r'[^\d,]', '', valor_preco_prazo).replace(',', '.')   # type: ignore
-    valor_preco_prazo = float(valor_preco_prazo_str)
+    if valor_preco_prazo:
+        valor_preco_prazo_str = re.sub(
+            r'[^\d,.]', '', valor_preco_prazo).replace(',', '.').replace('.', '')
+        valor_preco_prazo_float = float(valor_preco_prazo_str) / 100
+    else:
+        valor_preco_prazo_float = 0.0
 
     # Get product url
     url_completa = produto.find('a')['href']
@@ -94,4 +96,4 @@ for produto in produto:
                 cursor.close()
 
     print(marca, valor_preco_avista_str_msg,
-          valor_preco_prazo_str_msg,  url_completa)
+          valor_preco_prazo_float,  url_completa)

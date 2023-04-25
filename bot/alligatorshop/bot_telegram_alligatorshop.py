@@ -43,7 +43,7 @@ def web_scraping_alligatorshop(placa, loja, sent_message_file, url_pag, price_se
         # Begin web scraping
         site = requests.get(url_pag, headers=headers)
         soup = BeautifulSoup(site.content, 'html.parser')
-        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
+        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
         ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
         produto = soup.find_all('div', class_=re.compile(
             'col-6 col-sm-6 col-md-4 col-lg-4 mb-4'))
@@ -59,30 +59,28 @@ def web_scraping_alligatorshop(placa, loja, sent_message_file, url_pag, price_se
             if preco is not None:
                 preco = preco.get_text().strip()
             else:
-                preco = 0.0
-
-            # Variable with simbols exclusive to sent message to telegram group
-            valor_preco_avista_com_simbolo = preco
+                preco = '0.0'
 
             valor_preco_avista_str = re.sub(
                 r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
             valor_preco_avista = float(valor_preco_avista_str)
 
             # Get produtct price (credit card)
-            preco2 = produto.find('div', class_=re.compile(
-                'creditcard'))
-            valor_preco_prazo = preco2.find('span', class_='price total')
-            if valor_preco_prazo is not None:
-                valor_preco_prazo = valor_preco_prazo.get_text().strip()
+            preco2 = produto.find('div', class_=re.compile('creditcard'))
+            if preco2 is not None:
+                valor_preco_prazo_tag = preco2.find(
+                    'span', class_='price total')
+                valor_preco_prazo = valor_preco_prazo_tag.get_text(
+                ).strip() if valor_preco_prazo_tag is not None else None
             else:
-                valor_preco_prazo = 0.0
+                valor_preco_prazo = None
 
-            # Variable with simbols exclusive to sent message to telegram group
-            valor_preco_prazo_com_simbolo = valor_preco_prazo
-
-            valor_preco_prazo_str = re.sub(
-                r'[^\d,]', '', valor_preco_prazo).replace(',', '.')   # type: ignore # noqa
-            valor_preco_prazo = float(valor_preco_prazo_str)
+            if valor_preco_prazo:
+                valor_preco_prazo_str = re.sub(
+                    r'[^\d,.]', '', valor_preco_prazo).replace(',', '.').replace('.', '')  # noqa
+                valor_preco_prazo = float(valor_preco_prazo_str) / 100
+            else:
+                valor_preco_prazo = '0.0'
 
             # Get product url
             url_completa = produto.find('a')['href']
@@ -105,18 +103,28 @@ def web_scraping_alligatorshop(placa, loja, sent_message_file, url_pag, price_se
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-                cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                                (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+
+                cursor.execute(
+                    "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                 result = cursor.fetchone()
+
                 if result is None:
+                    # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                     if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                            marca, preco, url_marca, loja, valor_preco_prazo))
                         connection.commit()
-                        cursor.close()
+                else:
+                    # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                            preco, url_marca, valor_preco_prazo, marca, loja))
+                        connection.commit()
+
+            cursor.close()
 
             # Product model message and save in specific directory
-            message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {valor_preco_avista_com_simbolo} \n<b>Preço a prazo:</b> R$ {valor_preco_prazo_com_simbolo} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
+            message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {valor_preco_avista} \n<b>Preço a prazo:</b> R$ {valor_preco_prazo} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
             sent_messages_file = ROOT_DIR_MESSAGES / \
                 'messages_telegram' / sent_message_file
 

@@ -43,7 +43,7 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
         # Begin web scraping
         site = requests.get(url_pag, headers=headers)
         soup = BeautifulSoup(site.content, 'html.parser')
-        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
+        dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
         ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
         produtos = soup.find_all('div', class_=re.compile(
             'container-product-list'))
@@ -63,7 +63,7 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
 
                     # Get product name
                     marca = produto_soup.find(
-                        'span', itemprop='name').text.strip()
+                        'span', itemprop='name').text.strip()  # type: ignore
 
                     # Get product price (cash)
                     preco_simbol = "R$"
@@ -113,19 +113,29 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
                         preco = dic_produtos['preco'][i]
                         url_marca = dic_produtos['url_marca'][i]
                         loja = dic_produtos['loja'][i]
-                        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-                        cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+
+                        cursor.execute(
+                            "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                         result = cursor.fetchone()
+
                         if result is None:
+                            # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                             if preco != 0:
-                                cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                                (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                                cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                                    marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                                 connection.commit()
-                                cursor.close()
+                        else:
+                            # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                            if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                                cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                                    preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+                                connection.commit()
+
+                    cursor.close()
 
                     # Product model message and save in specific directory
-                    message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {preco_cash_msg} \n<b>Preço a prazo:</b> R$ {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa
+                    message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco_cash_msg} \n<b>Preço a prazo:</b> {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa
                     sent_messages_file = ROOT_DIR_MESSAGES / \
                         'messages_telegram' / sent_message_file
 
@@ -161,7 +171,3 @@ def send_message(mensagem, sent_messages_file):
             pickle.dump(sent_messages, f)
     else:
         pass
-
-
-web_scraping_patoloco('RTX 4090', 'PatoLoco', 'patoloco_RTX4090.pickle',  # noqa
-                   'https://patoloco.com.br/produtos/placa-de-video?product-filter=%7B%22Caracteristica%22%3A%7B%22placas-de-video-nvidia%22%3A%5B%22rtx%204090%22%5D%7D%7D', 12000)  # noqa

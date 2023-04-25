@@ -1,40 +1,57 @@
+{% load custom_filters %}
+
 <div class="filtros_formulario processadores">
     <h3>Filtros</h3>
     <br/>
-    <form>
+    <form method='get' action='.'>
     <h5>Selecione um modelo:</h5>
-    <select id="select-modelo" name="select-modelo" onchange="carregarDados()">
-    <optgroup label="Intel 10º Gen">
-      <option value="Intel 10gen i3">Processadores Core i3</option>
-      <option value="Intel 10gen i5">Processadores Core i5</option>
-      <option value="Intel 10gen i7">Processadores Core i7</option>
-      <option value="Intel 10gen i9">Processadores Core i9</option>
-    <optgroup label="Intel 11º Gen">
-      <option value="Intel 11gen i5">Processadores Core i5</option>
-      <option value="Intel 11gen i7">Processadores Core i7</option>
-      <option value="Intel 11gen i9">Processadores Core i9</option>
+    <select id="select-modelo" name="select-modelo" >
     <optgroup label="Intel 12º Gen">
-      <option value="Intel 12gen i3">Processadores Core i3</option>
-      <option value="Intel 12gen i5">Processadores Core i5</option>
-      <option value="Intel 12gen i7">Processadores Core i7</option>
-      <option value="Intel 12gen i9">Processadores Core i9</option>
-      <optgroup label="Intel 13º Gen">
-        <option value="Intel 13gen i5">Processadores Core i5</option>
-        <option value="Intel 13gen i7">Processadores Core i7</option>
-        <option value="Intel 13gen i9">Processadores Core i9</option>
-        <optgroup label="Ryzen 3 (3xxx)">
-          <option value="Ryzen 3xxx r3">Processadores Ryzen 3</option>
-          <option value="Ryzen 3xxx r5">Processadores Ryzen 5</option>
-          <option value="Ryzen 3xxx r7">Processadores Ryzen 7</option>
+      <option value="12100F">Processadores Core i3</option>
+      <option value="12400,12400F,12600K,12600KF">Processadores Core i5</option>
+      <option value="Processador Intel Core i7 12">Processadores Core i7</option>
+      <option value="Processador Intel Core i9 12">Processadores Core i9</option>
+    <optgroup label="Intel 13º Gen">
+      <option value="Processador Intel Core i5 13">Processadores Core i5</option>
+      <option value="Processador Intel Core i7 13">Processadores Core i7</option>
+      <option value="Processador Intel Core i9 13">Processadores Core i9</option>
+    <optgroup label="Ryzen 3 (3xxx)">
+      <option value="Ryzen 3xxx r3">Processadores Ryzen 3</option>
+      <option value="Ryzen 3xxx r5">Processadores Ryzen 5</option>
+      <option value="Ryzen 3xxx r7">Processadores Ryzen 7</option>
     </optgroup>
     </select>
-    </form>
-    </div>
+    <br/>
+    <br/>
+    <h5>Selecione uma loja:</h5>
+    <select id="select-loja" name="select-loja">
+        <option value="">Todas as lojas</option>
+        <option value="Kabum">KabuM</option>
+        <option value="Pichau">Pichau</option>
+    </select>
+    <br/><br/>
+    <button type='submit'>Filtrar</button>
+</form>
+</div>
     
     <div id="tabela-de-dados"></div>
-        <table>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
+    <table>
+      <thead>
+          <tr>
+              <th>Marca</th>
+              <th>Loja</th>
+              <th>Preço</th>
+              <th>Valor do preço a prazo</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for resultado in resultados %}
+          <tr>
+              <td><a href="{{ resultado.url_marca }}" target="_blank">{{ resultado.marca }}</a></td>
+              <td>{{ resultado.loja }}</td>
+              <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+              <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>

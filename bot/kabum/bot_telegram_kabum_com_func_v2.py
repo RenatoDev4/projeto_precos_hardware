@@ -1,3 +1,4 @@
+import locale
 import math
 import os
 import pickle
@@ -15,10 +16,14 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
+# Locale configuration
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
 # Function Web Scraping Kabum.com.br
 
 
-def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_sent_msg):  # noqa
+def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_sent_msg, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -68,6 +73,11 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
                 valor_preco_avista = float(valor_preco_avista_str)
             else:
                 valor_preco_avista = 0.0
+
+            # Variables exclusive to sending messages to telegram group:
+            preco_cash_msg = locale.currency(
+                valor_preco_avista, grouping=True).replace(' ', '')
+
             url_completa = (
                 url_base + str(produto.find('a', href=True)['href']))
             site_din = requests.get(url_completa, headers=headers)
@@ -91,6 +101,10 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
             else:
                 dic_produtos['valor_preco_prazo'].append(0.0)
 
+            # Variables exclusive to sending messages to telegram group:
+            preco_card_msg = locale.currency(
+                valor_preco_prazo, grouping=True).replace(' ', '')  # type: ignore # noqa
+
             # forwarding the data to the database
 
             connection = sqlite3.connect(DB_FILE)
@@ -101,29 +115,29 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
-                valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
+                valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+                if marca.startswith('Placa de Vídeo') or marca.startswith('Processador'):  # noqa
+                    cursor.execute(
+                        f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                    result = cursor.fetchone()
 
-                cursor.execute(
-                    "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-                result = cursor.fetchone()
-
-                if result is None:
-                    # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-                    if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                            marca, preco, url_marca, loja, valor_preco_prazo))
-                        connection.commit()
-                else:
-                    # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                            preco, url_marca, valor_preco_prazo, marca, loja))
-                        connection.commit()
+                    if result is None:
+                        # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+                        if preco != 0:
+                            cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                                marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                            connection.commit()
+                    else:
+                        # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                        if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                            cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                                preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+                            connection.commit()
 
             cursor.close()
 
             # Product model message and save in specific directory
-            message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco} \n<b>Preço a prazo:</b> {preco2} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
+            message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco_cash_msg} \n<b>Preço a prazo:</b> {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
             sent_messages_file = ROOT_DIR_MESSAGES / \
                 'messages_telegram' / sent_message_file
 

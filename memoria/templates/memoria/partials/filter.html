@@ -1,0 +1,31 @@
+<div class="filtros_formulario processadores">
+    <h3>Filtros</h3>
+    <br/>
+    <form>
+    <h5>MEMORIA</h5>
+    </optgroup>
+    </select>
+    </form>
+    </div>
+    
+    <div id="tabela-de-dados"></div>
+    <table>
+      <thead>
+          <tr>
+              <th>Marca</th>
+              <th>Loja</th>
+              <th>Preço</th>
+              <th>Valor do preço a prazo</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for resultado in resultados %}
+          <tr>
+              <td><a href="{{ resultado.url_marca }}" target="_blank">{{ resultado.marca }}</a></td>
+              <td>{{ resultado.loja }}</td>
+              <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+              <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>

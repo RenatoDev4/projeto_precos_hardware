@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'placasdevideo',
     'processadores',
     'placamae',
+    'memoria',
     'home',
 ]
 

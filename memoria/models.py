@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class SearchMOTHERBOARDS(models.Model):
+class SearchMemory(models.Model):
     marca = models.CharField(max_length=100)
     url_marca = models.CharField(max_length=100)
     loja = models.CharField(max_length=100)

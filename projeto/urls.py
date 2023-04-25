@@ -23,5 +23,6 @@ urlpatterns = [
     path('placasdevideo/', include('placasdevideo.urls')),
     path('processadores/', include('processadores.urls')),
     path('placamae/', include('placamae.urls')),
+    path('memoria/', include('memoria.urls')),
 
 ]

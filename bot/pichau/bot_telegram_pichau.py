@@ -14,14 +14,14 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
+# Database configuration
+DB_NAME = 'db.sqlite3'
+DB_FILE = DB_NAME
+
 # Function Web Scraping pichau.com.br
 
 
-def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
-
-    # Database configuration
-    DB_NAME = 'db.sqlite3'
-    DB_FILE = DB_NAME
+def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
     # Define Global Variables
     global message
@@ -108,6 +108,7 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
 
         # Add data to dictionary
         dic_produtos['marca'].append(marca)
+
         try:
             preco_float = float(preco)
         except ValueError:
@@ -116,9 +117,18 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
             dic_produtos['preco'].append(preco)
         else:
             dic_produtos['preco'].append(valor_preco_avista)
+
+        try:
+            preco_float2 = float(preco2)
+        except ValueError:
+            preco_float2 = valor_preco_prazo
+        if preco_float2 <= 1000:
+            dic_produtos['valor_preco_prazo'].append(preco_float2)
+        else:
+            dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+
         dic_produtos['url_marca'].append(url_marca)
         dic_produtos['loja'].append(loja)
-        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
 
         # forwarding the data to the database
 
@@ -133,19 +143,19 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg)
             valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
 
             cursor.execute(
-                "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
             result = cursor.fetchone()
 
             if result is None:
                 # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                 if preco != 0:
-                    cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                    cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
                         marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                     connection.commit()
             else:
                 # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
                 if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                    cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                    cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
                         preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
                     connection.commit()
 

@@ -96,10 +96,64 @@ URL_BASE_BUSCA = 'https://www.kabum.com.br/busca/'
 # web_scraping_kabum('RX 6400', 'Kabum', 'kabum_RX6400.pickle', URL_BASE,  # noqa
 #                    URL_BASE_BUSCA + 'RX-6400?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjQwMCJdfQ==&sort=most_searched', 875, DATABASE_NAME_VGA)  # noqa
 
-# ------------- Intel 12º -----------------#
+# ------------- Intel 12º e 13º -----------------#
 
-web_scraping_kabum('Processador Intel Core i3', 'Kabum', 'kabum_intel_i3_12.pickle', URL_BASE,  # noqa
-                   URL_BASE_BUSCA + 'core-i3?page_number=1&page_size=20&facet_filters=eyJHZXJhw6fDo28iOlsiMTLCqiBHZW4iXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+# web_scraping_kabum('Processador Intel Core i3', 'Kabum', 'kabum_intel_i3_12_13.pickle', URL_BASE,  # noqa
+#                    URL_BASE_BUSCA + 'core-i3?page_number=1&page_size=20&facet_filters=eyJTb2NrZXQiOlsiTEdBIDE3MDAiXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
 
-web_scraping_kabum('Processador Intel Core i5', 'Kabum', 'kabum_intel_i5_12.pickle', URL_BASE,  # noqa
-                   URL_BASE_BUSCA + 'core-i5?page_number=1&page_size=20&facet_filters=eyJHZXJhw6fDo28iOlsiMTLCqiBHZW4iXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+# web_scraping_kabum('Processador Intel Core i5', 'Kabum', 'kabum_intel_i5_12_13.pickle', URL_BASE,  # noqa
+#                    URL_BASE_BUSCA + 'core-i5?page_number=1&page_size=20&facet_filters=eyJTb2NrZXQiOlsiTEdBIDE3MDAiXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador Intel Core i7', 'Kabum', 'kabum_intel_i7_12_13.pickle', URL_BASE,  # noqa
+#                    URL_BASE_BUSCA + 'core-i7?page_number=1&page_size=20&facet_filters=eyJTb2NrZXQiOlsiTEdBIDE3MDAiXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador Intel Core i9', 'Kabum', 'kabum_intel_i9_12_13.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/processadores/processador-intel/core-i9?page_number=1&page_size=20&facet_filters=eyJTb2NrZXQiOlsiTEdBIDE3MDAiXX0=&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# ------------- AMD Ryzen 5xxx -----------------#
+
+# web_scraping_kabum('Processador AMD Ryzen 5500', 'Kabum', 'kabum_amd_r5_5500.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-5500?page_number=1&page_size=20&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 5600', 'Kabum', 'kabum_amd_r5_5600.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-5600?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 5700', 'Kabum', 'kabum_amd_r5_5700.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-5700?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 5800', 'Kabum', 'kabum_amd_r5_5800.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-5800?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 5900', 'Kabum', 'kabum_amd_r5_5900.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-5900?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# ------------- AMD Ryzen 7xxx -----------------#
+
+# web_scraping_kabum('Processador AMD Ryzen 7600', 'Kabum', 'kabum_amd_r5_7600.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-7600?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 7700', 'Kabum', 'kabum_amd_r7_7700.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-7700?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_kabum('Processador AMD Ryzen 7800', 'Kabum', 'kabum_amd_r7_7800.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/busca/Ryzen-7700?page_number=1&page_size=60&facet_filters=eyJjYXRlZ29yeSI6WyJIYXJkd2FyZSJdfQ==&sort=most_searched', 600, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# ------------- Memórias DDR4 -----------------#
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=1&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=2&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=3&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=4&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=5&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=6&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa

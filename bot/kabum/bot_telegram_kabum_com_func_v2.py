@@ -48,102 +48,103 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
     # Begin web scraping
     site = requests.get(url_pag, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
-    qnt_itens = soup.find(
-        'div', id='listingCount').get_text().strip()  # type: ignore
-    index = qnt_itens.find(' ')
-    qnt = qnt_itens[:index]
-    ultima_pagina = math.ceil(int(qnt) / 20)
     dic_produtos = {'marca': [], 'preco': [],
                     'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
 
-    for i in range(1, ultima_pagina + 1):
-        site = requests.get(url_pag, headers=headers)
-        soup = BeautifulSoup(site.content, 'html.parser')
-        produto = soup.find_all('div', class_=re.compile('productCard'))
+    produto = soup.find_all('div', class_=re.compile('productCard'))
 
-        for produto in produto:
-            marca = produto.find('span', class_=re.compile(
-                'nameCard')).get_text().strip()
-            preco = produto.find('span', class_=re.compile(
-                'priceCard')).get_text().strip()
-            url_marca = produto.find('a')['href']
-            valor_preco_avista_str = re.sub(
-                r'[^\d,]', '', preco).replace(',', '.')
-            if valor_preco_avista_str:
-                valor_preco_avista = float(valor_preco_avista_str)
+    for produto in produto:
+        marca = produto.find('span', class_=re.compile(
+            'nameCard')).get_text().strip()
+        preco = produto.find('span', class_=re.compile(
+            'priceCard')).get_text().strip()
+        url_marca = produto.find('a')['href']
+        valor_preco_avista_str = re.sub(
+            r'[^\d,]', '', preco).replace(',', '.')
+        if valor_preco_avista_str:
+            valor_preco_avista = float(valor_preco_avista_str)
+        else:
+            valor_preco_avista = 0.0
+
+        # Variables exclusive to sending messages to telegram group:
+        preco_cash_msg = locale.currency(
+            valor_preco_avista, grouping=True).replace(' ', '')
+
+        url_completa = (
+            url_base + str(produto.find('a', href=True)['href']))
+        site_din = requests.get(url_completa, headers=headers)
+        soup_2 = BeautifulSoup(site_din.content, 'html.parser')
+        dic_produtos['marca'].append(marca)
+        dic_produtos['preco'].append(valor_preco_avista)
+        dic_produtos['url_marca'].append(url_completa)
+        dic_produtos['loja'].append(loja)
+
+        preco2 = soup_2.find('b', {'class': 'regularPrice'})
+        valor_preco_prazo = 0.0  # initialize with default value
+        if preco2:
+            preco2 = preco2.get_text()
+            valor_preco_prazo_str = re.sub(
+                r'[^\d,]', '', preco2).replace(',', '.')
+            if valor_preco_prazo_str:
+                valor_preco_prazo = float(valor_preco_prazo_str)
             else:
-                valor_preco_avista = 0.0
+                valor_preco_prazo = 0.0
 
-            # Variables exclusive to sending messages to telegram group:
-            preco_cash_msg = locale.currency(
-                valor_preco_avista, grouping=True).replace(' ', '')
+            dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+        else:
+            dic_produtos['valor_preco_prazo'].append(0.0)
 
-            url_completa = (
-                url_base + str(produto.find('a', href=True)['href']))
-            site_din = requests.get(url_completa, headers=headers)
-            soup_2 = BeautifulSoup(site_din.content, 'html.parser')
-            dic_produtos['marca'].append(marca)
-            dic_produtos['preco'].append(valor_preco_avista)
-            dic_produtos['url_marca'].append(url_completa)
-            dic_produtos['loja'].append(loja)
+        # Get URL's of products
 
-            preco2 = soup_2.find('b', {'class': 'regularPrice'})
-            if preco2:
-                preco2 = preco2.get_text()
-                valor_preco_prazo_str = re.sub(
-                    r'[^\d,]', '', preco2).replace(',', '.')
-                if valor_preco_prazo_str:
-                    valor_preco_prazo = float(valor_preco_prazo_str)
+        url_find = produto.find('a')['href']
+        url_completa = (url_base + str(url_find))
+
+        # Add data to dictionary
+        dic_produtos['marca'].append(marca)
+        dic_produtos['preco'].append(valor_preco_avista)
+        dic_produtos['url_marca'].append(url_completa)
+        dic_produtos['loja'].append(loja)
+        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+
+        # forwarding the data to the database
+
+        connection = sqlite3.connect(DB_FILE)
+        cursor = connection.cursor()
+
+        for i in range(len(dic_produtos['marca'])):
+            marca = dic_produtos['marca'][i]
+            preco = dic_produtos['preco'][i]
+            url_marca = dic_produtos['url_marca'][i]
+            loja = dic_produtos['loja'][i]
+            valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória'):
+                cursor.execute(
+                    f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                result = cursor.fetchone()
+
+                if result is None:
+                    # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+                    if preco != 0:
+                        cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                            marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                        connection.commit()
                 else:
-                    valor_preco_prazo = 0.0
+                    # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                        cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                            preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+                        connection.commit()
 
-                dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
-            else:
-                dic_produtos['valor_preco_prazo'].append(0.0)
+        cursor.close()
 
-            # Variables exclusive to sending messages to telegram group:
-            preco_card_msg = locale.currency(
-                valor_preco_prazo, grouping=True).replace(' ', '')  # type: ignore # noqa
+        # Product model message and save in specific directory
+        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {valor_preco_avista} \n<b>Preço a prazo:</b> {valor_preco_prazo} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
+        sent_messages_file = ROOT_DIR_MESSAGES / \
+            'messages_telegram' / sent_message_file
 
-            # forwarding the data to the database
-
-            connection = sqlite3.connect(DB_FILE)
-            cursor = connection.cursor()
-
-            for i in range(len(dic_produtos['marca'])):
-                marca = dic_produtos['marca'][i]
-                preco = dic_produtos['preco'][i]
-                url_marca = dic_produtos['url_marca'][i]
-                loja = dic_produtos['loja'][i]
-                valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
-                if marca.startswith('Placa de Vídeo') or marca.startswith('Processador'):  # noqa
-                    cursor.execute(
-                        f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-                    result = cursor.fetchone()
-
-                    if result is None:
-                        # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-                        if preco != 0:
-                            cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                                marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                            connection.commit()
-                    else:
-                        # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-                        if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                            cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                                preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
-                            connection.commit()
-
-            cursor.close()
-
-            # Product model message and save in specific directory
-            message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {preco_cash_msg} \n<b>Preço a prazo:</b> {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
-            sent_messages_file = ROOT_DIR_MESSAGES / \
-                'messages_telegram' / sent_message_file
-
-            # Condictions to send message (VGA Model, Price, etc)
-            if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
-                send_message(message, sent_messages_file)
+        # Condictions to send message (VGA Model, Price, etc)
+        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
+            send_message(message, sent_messages_file)
 
 
 # Function to send message to telegram

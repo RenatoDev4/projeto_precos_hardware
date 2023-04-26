@@ -16,7 +16,7 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.pichau.com.br/hardware/placa-de-video?placadevideo=130&rgpu=6703'  # noqa
+url_pag = 'https://www.pichau.com.br/search?q=rx%206400'  # noqa
 loja = 'Pichau'
 
 scraper = cloudscraper.create_scraper()
@@ -97,7 +97,14 @@ for produto in produto:
         dic_produtos['preco'].append(valor_preco_avista)
     dic_produtos['url_marca'].append(url_marca)
     dic_produtos['loja'].append(loja)
-    dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+    try:
+        preco_float2 = float(preco2)
+    except ValueError:
+        preco_float2 = valor_preco_prazo
+    if preco_float2 <= 1000:
+        dic_produtos['valor_preco_prazo'].append(preco_float2)
+    else:
+        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
 
     print(marca, preco_cash_msg, preco_card_msg)
 

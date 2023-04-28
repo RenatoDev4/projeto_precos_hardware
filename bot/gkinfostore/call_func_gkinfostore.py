@@ -1,49 +1,57 @@
 from bot_telegram_gkinfostore import web_scraping_gkinfostore
 
+# ------------- DATABASE NAMES ----------------- #
+DATABASE_NAME_VGA = 'placasdevideo_searchvga'
+DATABASE_NAME_PROCESSADOR = 'processadores_searchprocessors'
+DATABASE_NAME_MOTHERBOARD = 'placamae_searchmotherboards'
+DATABASE_NAME_MEMORY = 'memoria_searchmemory'
+
+# ------------- URL NAME ----------------------- #
+
 URL_BASE = 'https://www.gkinfostore.com.br/'
 
 # RTX 4xxx
-web_scraping_gkinfostore('RTX 4090', 'GKInfoStore', 'gkinfostore_RTX4090.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-4090', 12000)  # noqa
+# web_scraping_gkinfostore('RTX 4090', 'GKInfoStore', 'gkinfostore_RTX4090.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-4090', 12000)  # noqa
 
-web_scraping_gkinfostore('RTX 4080', 'GKInfoStore', 'gkinfostore_RTX4080.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-4080', 8750)  # noqa
+# web_scraping_gkinfostore('RTX 4080', 'GKInfoStore', 'gkinfostore_RTX4080.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-4080', 8750)  # noqa
 
-web_scraping_gkinfostore('RTX 4070 Ti', 'GKInfoStore', 'gkinfostore_RTX4070ti.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-4070-ti', 6750)  # noqa
+# web_scraping_gkinfostore('RTX 4070 Ti', 'GKInfoStore', 'gkinfostore_RTX4070ti.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-4070-ti', 6750)  # noqa
 
-web_scraping_gkinfostore('RTX 4070', 'GKInfoStore', 'gkinfostore_RTX4070.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-4070', 6750)  # noqa
+# web_scraping_gkinfostore('RTX 4070', 'GKInfoStore', 'gkinfostore_RTX4070.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-4070', 6750)  # noqa
 
 
-# RTX 3xxx
+# # RTX 3xxx
 
-web_scraping_gkinfostore('RTX 3090 Ti', 'GKInfoStore', 'gkinfostore_RTX3090ti.pickle',  # noqa
-                    URL_BASE + 'geforce-rtx-3090-ti', 8000)  # noqa
+# web_scraping_gkinfostore('RTX 3090 Ti', 'GKInfoStore', 'gkinfostore_RTX3090ti.pickle',  # noqa
+#                     URL_BASE + 'geforce-rtx-3090-ti', 8000)  # noqa
 
-web_scraping_gkinfostore('RTX 3090', 'GKInfoStore', 'gkinfostore_RTX3090.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3090', 8000)  # noqa
+# web_scraping_gkinfostore('RTX 3090', 'GKInfoStore', 'gkinfostore_RTX3090.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3090', 8000)  # noqa
 
-web_scraping_gkinfostore('RTX 3080 Ti', 'GKInfoStore', 'gkinfostore_RTX3080ti.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3080-ti', 8000)  # noqa
+# web_scraping_gkinfostore('RTX 3080 Ti', 'GKInfoStore', 'gkinfostore_RTX3080ti.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3080-ti', 8000)  # noqa
 
-web_scraping_gkinfostore('RTX 3080', 'GKInfoStore', 'gkinfostore_RTX3080.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3080', 4900)  # noqa
+# web_scraping_gkinfostore('RTX 3080', 'GKInfoStore', 'gkinfostore_RTX3080.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3080', 4900)  # noqa
 
-web_scraping_gkinfostore('RTX 3070 Ti', 'GKInfoStore', 'gkinfostore_RTX3070ti.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3070-ti', 3900)  # noqa
+# web_scraping_gkinfostore('RTX 3070 Ti', 'GKInfoStore', 'gkinfostore_RTX3070ti.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3070-ti', 3900)  # noqa
 
-web_scraping_gkinfostore('RTX 3070', 'GKInfoStore', 'gkinfostore_RTX3070.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3070', 3400)  # noqa
+# web_scraping_gkinfostore('RTX 3070', 'GKInfoStore', 'gkinfostore_RTX3070.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3070', 3400)  # noqa
 
-web_scraping_gkinfostore('RTX 3060 Ti', 'GKInfoStore', 'gkinfostore_RTX3060ti.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3060-ti', 2600)  # noqa
+# web_scraping_gkinfostore('RTX 3060 Ti', 'GKInfoStore', 'gkinfostore_RTX3060ti.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3060-ti', 2600)  # noqa
 
-web_scraping_gkinfostore('RTX 3060', 'GKInfoStore', 'gkinfostore_RTX3060.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3060', 2100)  # noqa
+# web_scraping_gkinfostore('RTX 3060', 'GKInfoStore', 'gkinfostore_RTX3060.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3060', 2100)  # noqa
 
-web_scraping_gkinfostore('RTX 3050', 'GKInfoStore', 'gkinfostore_RTX3050.pickle',  # noqa
-                   URL_BASE + 'geforce-rtx-3050', 1625)  # noqa
+# web_scraping_gkinfostore('RTX 3050', 'GKInfoStore', 'gkinfostore_RTX3050.pickle',  # noqa
+#                    URL_BASE + 'geforce-rtx-3050', 1625)  # noqa
 
 # # RTX 2xxx e GTX 1xxx
 
@@ -87,3 +95,16 @@ web_scraping_gkinfostore('RTX 3050', 'GKInfoStore', 'gkinfostore_RTX3050.pickle'
 
 # web_scraping_gkinfostore('RX 6400', 'GKInfoStore', 'gkinfostore_RX6400.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RX-6400?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjQwMCJdfQ==&sort=most_searched', 875)  # noqa
+
+# --------------Processador----------------
+
+web_scraping_gkinfostore('Processador', 'GKInfoStore', 'gkinfostore_processador.pickle',  # noqa
+                   'https://www.gkinfostore.com.br/processador', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# --------------Memoria----------------
+
+web_scraping_gkinfostore('Memoria', 'GKInfoStore', 'gkinfostore_memoria.pickle',  # noqa
+                   'https://www.gkinfostore.com.br/memoria', 50, DATABASE_NAME_MEMORY)  # noqa
+
+web_scraping_gkinfostore('Memoria', 'GKInfoStore', 'gkinfostore_memoria.pickle',  # noqa
+                   'https://www.gkinfostore.com.br/memoria?pagina=2', 50, DATABASE_NAME_MEMORY)  # noqa

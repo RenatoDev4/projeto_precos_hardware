@@ -1,5 +1,13 @@
 from bot_telegram_guerradigital import web_scraping_guerradigital
 
+# ------------- DATABASE NAMES ----------------- #
+DATABASE_NAME_VGA = 'placasdevideo_searchvga'
+DATABASE_NAME_PROCESSADOR = 'processadores_searchprocessors'
+DATABASE_NAME_MOTHERBOARD = 'placamae_searchmotherboards'
+DATABASE_NAME_MEMORY = 'memoria_searchmemory'
+
+# ------------- URL NAME ----------------------- #
+
 URL_BASE_NVIDIA = 'https://www.guerradigital.com.br/hardware/placa-de-video/nvidia-geforce/?mpage=6'  # noqa
 URB_BASE_AMD = 'https://www.guerradigital.com.br/hardware/placa-de-video/amd-radeon/'  # noqa
 
@@ -10,8 +18,8 @@ URB_BASE_AMD = 'https://www.guerradigital.com.br/hardware/placa-de-video/amd-rad
 # web_scraping_guerradigital('RTX 4080', 'GKInfoStore', 'gkinfostore_RTX4080.pickle',  # noqa
 #                    'https://www.fgtec.com.br/produtos?q=rtx+4080', 8750)  # noqa
 
-web_scraping_guerradigital('RTX 4070 Ti', 'Guerra Digital', 'guerradigital_RTX4070ti.pickle',  # noqa
-                   URL_BASE_NVIDIA, 100)  # noqa
+# web_scraping_guerradigital('RTX 4070 Ti', 'Guerra Digital', 'guerradigital_RTX4070ti.pickle',  # noqa
+#                    URL_BASE_NVIDIA, 100)  # noqa
 
 # web_scraping_guerradigital('RTX 4070', 'GKInfoStore', 'gkinfostore_RTX4070.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/rtx-4070?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIFJUWCBTw6lyaWUgNDAiOlsiUlRYIDQwNzAiLCJSVFggNDA3MCBFWCJdfQ==&sort=most_searched', 6750)  # noqa
@@ -62,8 +70,8 @@ web_scraping_guerradigital('RTX 4070 Ti', 'Guerra Digital', 'guerradigital_RTX40
 
 # AMD RADEON 7xxx and 6xxx
 
-web_scraping_guerradigital('RX 7900 XT', 'GKInfoStore', 'gkinfostore_RX7900.pickle',  # noqa
-                   'https://www.guerradigital.com.br/hardware/placa-de-video/amd-radeon/', 100)  # noqa
+# web_scraping_guerradigital('RX 7900 XT', 'GKInfoStore', 'gkinfostore_RX7900.pickle',  # noqa
+#                    'https://www.guerradigital.com.br/hardware/placa-de-video/amd-radeon/', 100)  # noqa
 
 # web_scraping_guerradigital('RX 6900 XT', 'GKInfoStore', 'gkinfostore_RX6900XT.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RX-6900-XT?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjkwMCBYVCJdfQ==&sort=most_searched', 5700)  # noqa
@@ -88,3 +96,25 @@ web_scraping_guerradigital('RX 7900 XT', 'GKInfoStore', 'gkinfostore_RX7900.pick
 
 # web_scraping_guerradigital('RX 6400', 'GKInfoStore', 'gkinfostore_RX6400.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RX-6400?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjQwMCJdfQ==&sort=most_searched', 875)  # noqa
+
+# ------------- Processador ----------------------- #
+
+# web_scraping_guerradigital('Processador', 'Guerra Digital', 'guerradigital_processador.pickle',  # noqa
+#                    'https://www.guerradigital.com.br/hardware/processador/', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_guerradigital('Processador', 'Guerra Digital', 'guerradigital_processador.pickle',  # noqa
+#                    'https://www.guerradigital.com.br/hardware/processador/?mpage=2', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_guerradigital('Processador', 'Guerra Digital', 'guerradigital_processador.pickle',  # noqa
+#                    'https://www.guerradigital.com.br/hardware/processador/?mpage=3', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_guerradigital('Processador', 'Guerra Digital', 'guerradigital_processador.pickle',  # noqa
+#                    'https://www.guerradigital.com.br/hardware/processador/?mpage=4', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# ------------- Memoria ----------------------- #
+
+web_scraping_guerradigital('Memoria', 'Guerra Digital', 'guerradigital_memoria.pickle',  # noqa
+                   'https://www.guerradigital.com.br/hardware/memoria/ddr4/', 50, DATABASE_NAME_MEMORY)  # noqa
+
+web_scraping_guerradigital('Memoria', 'Guerra Digital', 'guerradigital_memoria.pickle',  # noqa
+                   'https://www.guerradigital.com.br/hardware/memoria/ddr4/?mpage=2', 50, DATABASE_NAME_MEMORY)  # noqa

@@ -18,7 +18,7 @@ sent_messages_file = ''
 # Function Web Scraping patoloco.com.br
 
 
-def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
+def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -72,7 +72,7 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
                     if preco is not None:
                         preco = preco.text.strip()
                     else:
-                        continue
+                        preco = '0.0'
 
                     valor_preco_avista_str = re.sub(
                         r'[^\d,]', '', preco).replace(',', '.')   # type: ignore # noqa
@@ -87,7 +87,7 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
                     if len(precos) >= 2:
                         preco2 = precos[1].text.replace('\n', '').strip()
                     else:
-                        continue
+                        preco2 = '0.0'
 
                     valor_preco_prazo_str = re.sub(
                         r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore # noqa
@@ -110,27 +110,28 @@ def web_scraping_patoloco(placa, loja, sent_message_file, url_pag, price_sent_ms
 
                     for i in range(len(dic_produtos['marca'])):
                         marca = dic_produtos['marca'][i]
-                        preco = dic_produtos['preco'][i]
-                        url_marca = dic_produtos['url_marca'][i]
-                        loja = dic_produtos['loja'][i]
-                        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+                        if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria'):  # noqa
+                            preco = dic_produtos['preco'][i]
+                            url_marca = dic_produtos['url_marca'][i]
+                            loja = dic_produtos['loja'][i]
+                            valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
 
-                        cursor.execute(
-                            "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-                        result = cursor.fetchone()
+                            cursor.execute(
+                                f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                            result = cursor.fetchone()
 
-                        if result is None:
-                            # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-                            if preco != 0:
-                                cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                                    marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                                connection.commit()
-                        else:
-                            # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-                            if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                                cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                                    preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
-                                connection.commit()
+                            if result is None:
+                                # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+                                if preco != 0:
+                                    cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                                        marca, preco, url_marca, loja, valor_preco_prazo))
+                                    connection.commit()
+                            else:
+                                # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                                if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                                    cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                                        preco, url_marca, valor_preco_prazo, marca, loja))
+                                    connection.commit()
 
                     cursor.close()
 

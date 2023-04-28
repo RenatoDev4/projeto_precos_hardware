@@ -18,7 +18,7 @@ sent_messages_file = ''
 # Function Web Scraping gkinfostore.com.br
 
 
-def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
+def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -102,19 +102,19 @@ def web_scraping_gkinfostore(placa, loja, sent_message_file, url_pag, price_sent
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
 
                 cursor.execute(
-                    "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                    f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                 result = cursor.fetchone()
 
                 if result is None:
                     # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                     if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                        cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
                             marca, preco, url_marca, loja, valor_preco_prazo))
                         connection.commit()
                 else:
                     # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
                     if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                        cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
                             preco, url_marca, valor_preco_prazo, marca, loja))
                         connection.commit()
 
@@ -157,7 +157,3 @@ def send_message(mensagem, sent_messages_file):
             pickle.dump(sent_messages, f)
     else:
         pass
-
-
-web_scraping_gkinfostore('RTX 4090', 'GKInfoStore', 'gkinfostore_RTX4090.pickle',  # noqa
-                   'https://www.gkinfostore.com.br/geforce-rtx-4090', 12000)  # noqa

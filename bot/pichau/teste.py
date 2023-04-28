@@ -1,8 +1,10 @@
 import locale
 import sqlite3
+import urllib.parse
 from typing import Any, Dict, List
 
 import cloudscraper
+import requests
 from bs4 import BeautifulSoup
 
 # Database configuration
@@ -19,8 +21,14 @@ headers = {
 url_pag = 'https://www.pichau.com.br/search?q=rx%206400'  # noqa
 loja = 'Pichau'
 
-scraper = cloudscraper.create_scraper()
-site = scraper.get(url_pag, headers=headers)
+
+sa_key = '6f3d228e5ce94bdeb79c4223e3b9b8c0'  # paste here
+sa_api = 'https://api.scrapingant.com/v2/general'
+qParams = {'url': 'https://www.pichau.com.br/search?q=rx%206400',
+           'x-api-key': sa_key}
+reqUrl = f'{sa_api}?{urllib.parse.urlencode(qParams)}'
+
+site = requests.get(reqUrl)
 
 soup = BeautifulSoup(site.content, 'html.parser')
 
@@ -33,6 +41,7 @@ produto = soup.find_all(
 urls_visitadas = set()
 
 for produto in produto:
+    print(produto)  # verifique se está iterando corretamente
     # Verifica se a URL já foi visitada
     url_elemento = produto.find('a')
     if url_elemento is None:
@@ -45,10 +54,12 @@ for produto in produto:
     # Get product names
     marca = produto.find(
         'h2', class_='MuiTypography-root jss76 jss77 MuiTypography-h6')
+
     if marca is not None:
         marca = marca.get_text().strip()
     else:
-        continue
+        continue  # use continue sem argumentos para pular a iteração atual
+    print(marca)  # verifique se a variável ainda está sendo atribuída corretamente
 
     # Get product price (cash)
     preco = produto.find('div', class_='jss79')
@@ -105,8 +116,6 @@ for produto in produto:
         dic_produtos['valor_preco_prazo'].append(preco_float2)
     else:
         dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
-
-    print(marca, preco_cash_msg, preco_card_msg)
 
     # forwarding the data to the database
 

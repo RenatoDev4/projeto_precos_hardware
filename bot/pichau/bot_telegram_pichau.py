@@ -40,7 +40,8 @@ def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg,
         sent_messages = []
 
     # Begin web scraping
-    scraper = cloudscraper.create_scraper()
+    scraper = cloudscraper.create_scraper(
+        delay=10, browser='chrome', interpreter='nodejs', captcha={'provider': 'return_response'})
     site = scraper.get(url_pag, headers=headers)
 
     soup = BeautifulSoup(site.content, 'html.parser')

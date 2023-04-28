@@ -6,8 +6,11 @@ DATABASE_NAME_PROCESSADOR = 'processadores_searchprocessors'
 DATABASE_NAME_MOTHERBOARD = 'placamae_searchmotherboards'
 DATABASE_NAME_MEMORY = 'memoria_searchmemory'
 
-URL_BASE_VGA = 'https://www.pichau.com.br/hardware/placa-de-video?placadevideo='  # noqa
-URL_BASE_MEMORY = 'https://www.pichau.com.br/hardware/memorias?tipo_de_memoria='
+# ------------- URL's NAMES -----------------#
+
+URL_BASE_VGA = 'https://www.pichau.com.br/hardware/placa-de-video?placadevideo='
+URL_BASE_PROC = 'https://www.pichau.com.br/hardware/processadores'  # noqa
+URL_BASE_MEMORY = 'https://www.pichau.com.br/hardware/memorias'
 
 # # # RTX 4xxx
 # web_scraping_pichau('RTX 4090', 'Pichau', 'pichau_RTX4090.pickle',
@@ -95,25 +98,40 @@ URL_BASE_MEMORY = 'https://www.pichau.com.br/hardware/memorias?tipo_de_memoria='
 # web_scraping_pichau('RX 6400', 'Pichau', 'pichau_RX6400.pickle',   # noqa
 #                    URL_BASE_VGA + '129&rgpu=6630', 875)  # noqa
 
+
+# ------------- Processador -----------------#
+
+# web_scraping_pichau('Processador', 'Pichau', 'processador.pickle',   # noqa
+#                    URL_BASE_PROC, 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_pichau('Processador', 'Pichau', 'processador.pickle',   # noqa
+#                    URL_BASE_PROC + '?page=2', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# web_scraping_pichau('Processador', 'Pichau', 'processador.pickle',   # noqa
+#                    URL_BASE_PROC + '?page=3', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# # ------------- Memórias -----------------#
+
 # web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-#                    URL_BASE_MEMORY + '422', 50, DATABASE_NAME_MEMORY)  # noqa
-
-# ------------- Memórias -----------------#
+#                    URL_BASE_MEMORY, 50, DATABASE_NAME_MEMORY)  # noqa
 
 # web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-#                    URL_BASE_MEMORY + '422', 50, DATABASE_NAME_MEMORY)  # noqa
+#                    URL_BASE_MEMORY + '?page=2', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
+#                    URL_BASE_MEMORY + '?page=3', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
+#                    URL_BASE_MEMORY + '?page=4', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
+#                    URL_BASE_MEMORY + '?page=5', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
+#                    URL_BASE_MEMORY + '?page=6', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
+#                    URL_BASE_MEMORY + '?page=7', 50, DATABASE_NAME_MEMORY)  # noqa
 
 web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-                   URL_BASE_MEMORY + '422&page=2', 50, DATABASE_NAME_MEMORY)  # noqa
-
-web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-                   URL_BASE_MEMORY + '422&page=3', 50, DATABASE_NAME_MEMORY)  # noqa
-
-web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-                   URL_BASE_MEMORY + '422&page=4', 50, DATABASE_NAME_MEMORY)  # noqa
-
-web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-                   URL_BASE_MEMORY + '422&page=5', 50, DATABASE_NAME_MEMORY)  # noqa
-
-web_scraping_pichau('2666MHz', 'Pichau', 'pichau_memory.pickle',   # noqa
-                   URL_BASE_MEMORY + '422&page=6', 50, DATABASE_NAME_MEMORY)  # noqa
+                   URL_BASE_MEMORY + '?page=8', 50, DATABASE_NAME_MEMORY)  # noqa

@@ -78,7 +78,12 @@ URL_BASE = 'https://www.alligatorshop.com.br/'
 #                    URL_BASE + 'radeon-rx-6600-xt', 2350, DATABASE_NAME_VGA)  # noqa
 
 
-# ------------- INTEL 12th gen -----------------#
+# ------------- Processadores -----------------#
 
-web_scraping_alligatorshop('Processador Intel Core i3', 'AlligatorShop', 'alligator_intei7_12_gen.pickle',  # noqa
-                   URL_BASE + 'produtos?q=Intel+Core+12', 1400, DATABASE_NAME_PROCESSADOR)  # noqa
+web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+                   'https://www.alligatorshop.com.br/processador?limit=36', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+# ------------- Memorias DDR4 - DDR5 -----------------#
+
+web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+                   'https://www.alligatorshop.com.br/memoria-ram?limit=36', 50, DATABASE_NAME_MEMORY)  # noqa

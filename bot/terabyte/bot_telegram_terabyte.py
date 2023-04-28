@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import cloudscraper
+import requests  # type: ignore
 import telebot
 from bs4 import BeautifulSoup
 
@@ -23,7 +24,7 @@ locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 # Function Web Scraping terabyteshop.com.br
 
 
-def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_msg):  # noqa
+def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -46,10 +47,42 @@ def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_ms
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                 AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/109.0.0.0 Safari/537.36"}
-    scraper = cloudscraper.create_scraper()
-    site = scraper.get(url_pag, headers=headers)
+    # Sua chave de API 2captcha
+    API_KEY = '3321608b9bb8343b2d991f76d1ac91fa'
 
-    soup = BeautifulSoup(site.content, 'html.parser')
+    # Cria um objeto cloudscraper
+    scraper = cloudscraper.create_scraper()
+
+    # Verifica se já tem o cookie do captcha salvo
+    cookies = {}
+    try:
+        with open('captcha_cookies.txt', 'r') as f:
+            for line in f:
+                name, value = line.strip().split('\t', 1)
+                cookies[name] = value
+    except FileNotFoundError:
+        pass
+
+    # Obtém o token do site usando o 2captcha
+    if 'r_captcha' not in cookies:
+        response = requests.get(
+            f'https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey=6LdAUwoUAAAAAJvsFUJRaPMG9u8GqHJbE3q5Q5xN&pageurl={url_pag}')  # noqa
+        token = response.text.split('|')[1]
+        cookies['r_captcha'] = token
+        # Salva o cookie do captcha
+        with open('captcha_cookies.txt', 'w') as f:
+            for name, value in cookies.items():
+                f.write(f'{name}\t{value}\n')
+    else:
+        token = cookies['r_captcha']
+
+    # Envia uma solicitação usando o token e o cookie do captcha
+    headers = {'referer': url_pag}
+    params = {'g-recaptcha-response': token}
+    response = scraper.get(url_pag, headers=headers,
+                           params=params, cookies=cookies)
+
+    soup = BeautifulSoup(response.content, 'html.parser')
 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
@@ -110,26 +143,26 @@ def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_ms
 
         for i in range(len(dic_produtos['marca'])):
             marca = dic_produtos['marca'][i]
-            if marca.startswith('Placa de Vídeo'):
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria'):  # noqa
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
 
                 cursor.execute(
-                    "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+                    f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                 result = cursor.fetchone()
 
                 if result is None:
                     # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                     if preco != 0:
-                        cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                        cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
                             marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
                         connection.commit()
                 else:
                     # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
                     if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                        cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                        cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
                             preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
                         connection.commit()
 

@@ -14,4 +14,10 @@ def placasdevideo(request):
             valor_preco_prazo=0).order_by('preco')[:19]
     if loja:
         resultados = resultados.filter(loja__icontains=loja)
-    return render(request, 'placasdevideo/pages/index.html', {'resultados': resultados})  # noqa
+
+    selecionados = {
+        'modelo': modelo,
+        'loja': loja,
+    }
+
+    return render(request, 'placasdevideo/pages/index.html', {'resultados': resultados, 'selecionados': selecionados})  # noqa

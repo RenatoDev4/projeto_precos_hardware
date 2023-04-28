@@ -103,7 +103,7 @@ def web_scraping_alligatorshop(placa, loja, sent_message_file, url_pag, price_se
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
                 valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-                if marca.startswith('Placa de Vídeo') or marca.startswith('Processador'):
+                if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria'):
                     cursor.execute(
                         f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                     result = cursor.fetchone()

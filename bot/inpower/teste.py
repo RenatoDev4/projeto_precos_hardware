@@ -15,7 +15,7 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.inpower.com.br/pesquisa?t=RTX+3060'
+url_pag = 'https://www.inpower.com.br/hardware/processadores?pg=2'
 loja = 'Inpower'
 
 # Database configuration
@@ -74,23 +74,23 @@ for produto in produto:
 
     # forwarding the data to the database
 
-    connection = sqlite3.connect(DB_FILE)
-    cursor = connection.cursor()
+    # connection = sqlite3.connect(DB_FILE)
+    # cursor = connection.cursor()
 
-    for i in range(len(dic_produtos['marca'])):
-        marca = dic_produtos['marca'][i]
-        preco = dic_produtos['preco'][i]
-        url_marca = dic_produtos['url_marca'][i]
-        loja = dic_produtos['loja'][i]
-        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-        cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-        result = cursor.fetchone()
-        if result is None:
-            if preco != 0:
-                cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                connection.commit()
-                cursor.close()
+    # for i in range(len(dic_produtos['marca'])):
+    #     marca = dic_produtos['marca'][i]
+    #     preco = dic_produtos['preco'][i]
+    #     url_marca = dic_produtos['url_marca'][i]
+    #     loja = dic_produtos['loja'][i]
+    #     valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
+    #     cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
+    #                     (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+    #     result = cursor.fetchone()
+    #     if result is None:
+    #         if preco != 0:
+    #             cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
+    #                             (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+    #             connection.commit()
+    #             cursor.close()
 
     print(marca, preco_cash_msg, preco_card_msg)

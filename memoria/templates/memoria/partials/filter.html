@@ -1,13 +1,13 @@
 {% load custom_filters %}
 
 <div class="filtros_formulario memorias">
-  <h3>Filtros</h3>
   <form method='get' action='.'>
     <div class="input-group">
       <label for="select-modelo">
         <h5>Selecione um modelo:</h5>
       </label>
       <select id="select-modelo" name="select-modelo" class="select-menu">
+          <option value="">Todas as memórias</option>
         <optgroup label="Memórias DDR4">
           <option value="2666MHz" {% if selecionados.modelo == '2666MHz' %}selected{% endif %}>Memórias 2666MHz</option>
           <option value="2933MHz" {% if selecionados.modelo == '2933MHz' %}selected{% endif %}>Memórias 2933MHz</option>
@@ -41,15 +41,6 @@
       </select>
     </div>
 
-    <div class="input-group">
-      <label for="select-desktop_ou_note">
-        <h5>Para Desktop ou Notebook?</h5>
-      </label>
-      <select id="select-desktop_ou_note" name="select-desktop_ou_note" class="select-menu">
-        <option value="Para Desktop" {% if selecionados.desktop_ou_notebook == 'Para Desktop' %}selected{% endif %}>Para Desktop</option>
-        <option value="Para Notebook" {% if selecionados.desktop_ou_notebook == 'Para Notebook' %}selected{% endif %}>Para Notebook</option>
-      </select>
-    </div>
 
     <div class="input-group">
       <label for="select-loja">
@@ -57,10 +48,19 @@
       </label>
       <select id="select-loja" name="select-loja" class="select-menu">
         <option value="">Todas as lojas</option>
-        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>KabuM</option>
+        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
         <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
+        <option value="Terabyte" {% if selecionados.loja == 'Terabyte' %}selected{% endif %}>Terabyte</option>
+        <option value="AlligatorShop" {% if selecionados.loja == 'AlligatorShop' %}selected{% endif %}>AlligatorShop</option>
+        <option value="FGTEC" {% if selecionados.loja == 'FGTEC' %}selected{% endif %}>FGTEC</option>
+        <option value="Gabi Games" {% if selecionados.loja == 'Gabi Games' %}selected{% endif %}>Gabi Games</option>
+        <option value="GKInfoStore" {% if selecionados.loja == 'GKInfoStore' %}selected{% endif %}>GKInfoStore</option>
+        <option value="Guerra Digital" {% if selecionados.loja == 'Guerra Digital' %}selected{% endif %}>Guerra Digital</option>
+        <option value="INPOWER" {% if selecionados.loja == 'INPOWER' %}selected{% endif %}>INPOWER</option>
+        <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
+        <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
       </select>
-    </div>
+  </div>
 
     <br>
     <button type='submit'>Filtrar</button>

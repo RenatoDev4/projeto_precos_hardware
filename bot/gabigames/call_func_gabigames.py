@@ -1,62 +1,69 @@
 from bot_telegram_gabigames import web_scraping_gabigames
 
+# ------------- DATABASE NAMES -----------------#
+DATABASE_NAME_VGA = 'placasdevideo_searchvga'
+DATABASE_NAME_PROCESSADOR = 'processadores_searchprocessors'
+DATABASE_NAME_MOTHERBOARD = 'placamae_searchmotherboards'
+DATABASE_NAME_MEMORY = 'memoria_searchmemory'
+
+# ------------- URL NAMES -----------------#
 LINK_RTX_4xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+4090'  # noqa
 LINK_RTX_3xxx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=RTX+3090&categories%5B%5D=Placas%2Bde%2BV%25EDdeo'  # noqa
 LINK_GTX_16xx = 'https://www.gabigames.gg/loja/busca.php?loja=1177600&palavra_busca=GTX+1650'  # noqa
 
-# RTX 4xxx
-web_scraping_gabigames('RTX 4090', 'Gabi Games', 'gabigames_RTX4090.pickle',
-                    LINK_RTX_4xxx, 12000)  # noqa
+# # RTX 4xxx
+# web_scraping_gabigames('RTX 4090', 'Gabi Games', 'gabigames_RTX4090.pickle',
+#                     LINK_RTX_4xxx, 12000)  # noqa
 
-web_scraping_gabigames('RTX 4080', 'Gabi Games', 'gabigames_RTX4080.pickle',  # noqa
-                   LINK_RTX_4xxx, 8750)  # noqa
+# web_scraping_gabigames('RTX 4080', 'Gabi Games', 'gabigames_RTX4080.pickle',  # noqa
+#                    LINK_RTX_4xxx, 8750)  # noqa
 
-web_scraping_gabigames('RTX 4070 Ti', 'Gabi Games', 'gabigames_RTX4070ti.pickle',  # noqa
-                   LINK_RTX_4xxx, 6750)  # noqa
+# web_scraping_gabigames('RTX 4070 Ti', 'Gabi Games', 'gabigames_RTX4070ti.pickle',  # noqa
+#                    LINK_RTX_4xxx, 6750)  # noqa
 
-web_scraping_gabigames('RTX 4070', 'Gabi Games', 'gabigames_RTX4070.pickle',  # noqa
-                   LINK_RTX_4xxx, 5500)  # noqa
+# web_scraping_gabigames('RTX 4070', 'Gabi Games', 'gabigames_RTX4070.pickle',  # noqa
+#                    LINK_RTX_4xxx, 5500)  # noqa
 
 
-# RTX 3xxx
+# # RTX 3xxx
 
-web_scraping_gabigames('RTX 3090 Ti', 'Gabi Games', 'gabigames_RTX3090ti.pickle',  # noqa
-                   LINK_RTX_3xxx, 8000)  # noqa
+# web_scraping_gabigames('RTX 3090 Ti', 'Gabi Games', 'gabigames_RTX3090ti.pickle',  # noqa
+#                    LINK_RTX_3xxx, 8000)  # noqa
 
-web_scraping_gabigames('RTX 3090', 'Gabi Games', 'gabigames_RTX3090.pickle',  # noqa
-                   LINK_RTX_3xxx, 8000)  # noqa
+# web_scraping_gabigames('RTX 3090', 'Gabi Games', 'gabigames_RTX3090.pickle',  # noqa
+#                    LINK_RTX_3xxx, 8000)  # noqa
 
-web_scraping_gabigames('RTX 3080 Ti', 'Gabi Games', 'gabigames_RTX3080ti.pickle',  # noqa
-                   LINK_RTX_3xxx, 8000)  # noqa
+# web_scraping_gabigames('RTX 3080 Ti', 'Gabi Games', 'gabigames_RTX3080ti.pickle',  # noqa
+#                    LINK_RTX_3xxx, 8000)  # noqa
 
-web_scraping_gabigames('RTX 3080', 'Gabi Games', 'gabigames_RTX3080.pickle',  # noqa
-                   LINK_RTX_3xxx, 4900)  # noqa
+# web_scraping_gabigames('RTX 3080', 'Gabi Games', 'gabigames_RTX3080.pickle',  # noqa
+#                    LINK_RTX_3xxx, 4900)  # noqa
 
-web_scraping_gabigames('RTX 3070 Ti', 'Gabi Games', 'gabigames_RTX3070ti.pickle',  # noqa
-                   LINK_RTX_3xxx, 3900)  # noqa
+# web_scraping_gabigames('RTX 3070 Ti', 'Gabi Games', 'gabigames_RTX3070ti.pickle',  # noqa
+#                    LINK_RTX_3xxx, 3900)  # noqa
 
-web_scraping_gabigames('RTX 3070', 'Gabi Games', 'gabigames_RTX3070.pickle',  # noqa
-                   LINK_RTX_3xxx, 3400)  # noqa
+# web_scraping_gabigames('RTX 3070', 'Gabi Games', 'gabigames_RTX3070.pickle',  # noqa
+#                    LINK_RTX_3xxx, 3400)  # noqa
 
-web_scraping_gabigames('RTX 3060 Ti', 'Gabi Games', 'gabigames_RTX3060ti.pickle',  # noqa
-                   LINK_RTX_3xxx, 2600)  # noqa
+# web_scraping_gabigames('RTX 3060 Ti', 'Gabi Games', 'gabigames_RTX3060ti.pickle',  # noqa
+#                    LINK_RTX_3xxx, 2600)  # noqa
 
-web_scraping_gabigames('RTX 3060', 'Gabi Games', 'gabigames_RTX3060.pickle',  # noqa
-                   LINK_RTX_3xxx, 2100)  # noqa
+# web_scraping_gabigames('RTX 3060', 'Gabi Games', 'gabigames_RTX3060.pickle',  # noqa
+#                    LINK_RTX_3xxx, 2100)  # noqa
 
-web_scraping_gabigames('RTX 3050', 'Gabi Games', 'gabigames_RTX3050.pickle',  # noqa
-                   LINK_RTX_3xxx, 1625)  # noqa
+# web_scraping_gabigames('RTX 3050', 'Gabi Games', 'gabigames_RTX3050.pickle',  # noqa
+#                    LINK_RTX_3xxx, 1625)  # noqa
 
-# RTX 2xxx e GTX 1xxx
+# # RTX 2xxx e GTX 1xxx
 
-# web_scraping_gabigames('RTX 2060', 'Gabi Games', 'gabigames_RTX2060.pickle',  # noqa
-#                    'https://www.kabum.com.br/busca/RTX-2060?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIFJUWCBTw6lyaWUgMjAiOlsiUlRYIDIwNjAiLCJSVFggMjA2MCBTdXBlciJdfQ==&sort=most_searched', 1600)  # noqa
+# # web_scraping_gabigames('RTX 2060', 'Gabi Games', 'gabigames_RTX2060.pickle',  # noqa
+# #                    'https://www.kabum.com.br/busca/RTX-2060?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIFJUWCBTw6lyaWUgMjAiOlsiUlRYIDIwNjAiLCJSVFggMjA2MCBTdXBlciJdfQ==&sort=most_searched', 1600)  # noqa
 
-# web_scraping_gabigames('GTX 1660', 'Gabi Games', 'gabigames_GTX1660.pickle',  # noqa
-#                    'https://www.kabum.com.br/busca/RTX-1660?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIEdUWCBTw6lyaWUgMTYiOlsiR1RYIDE2NjAiLCJHVFggMTY2MCBTdXBlciIsIkdUWCAxNjYwIFRpIl19&sort=most_searched', 1300)  # noqa
+# # web_scraping_gabigames('GTX 1660', 'Gabi Games', 'gabigames_GTX1660.pickle',  # noqa
+# #                    'https://www.kabum.com.br/busca/RTX-1660?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIEdUWCBTw6lyaWUgMTYiOlsiR1RYIDE2NjAiLCJHVFggMTY2MCBTdXBlciIsIkdUWCAxNjYwIFRpIl19&sort=most_searched', 1300)  # noqa
 
-web_scraping_gabigames('GTX 1650', 'Gabi Games', 'gabigames_GTX1650.pickle',  # noqa
-                   LINK_GTX_16xx, 950)  # noqa
+# web_scraping_gabigames('GTX 1650', 'Gabi Games', 'gabigames_GTX1650.pickle',  # noqa
+#                    LINK_GTX_16xx, 950)  # noqa
 
 # web_scraping_gabigames('GTX 1630', 'Gabi Games', 'gabigames_GTX1630.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RTX-1660?page_number=1&page_size=20&facet_filters=eyJHZUZvcmNlIEdUWCBTw6lyaWUgMTYiOlsiR1RYIDE2MzAiXX0=&sort=most_searched', 800)  # noqa
@@ -89,3 +96,17 @@ web_scraping_gabigames('GTX 1650', 'Gabi Games', 'gabigames_GTX1650.pickle',  # 
 
 # web_scraping_gabigames('RX 6400', 'Gabi Games', 'gabigames_RX6400.pickle',  # noqa
 #                    'https://www.kabum.com.br/busca/RX-6400?page_number=1&page_size=20&facet_filters=eyJSYWRlb24gUlggU8OpcmllIDYwMDAiOlsiUlggNjQwMCJdfQ==&sort=most_searched', 875)  # noqa
+
+# ----------------Processador----------------
+
+web_scraping_gabigames('Processador', 'Gabi Games', 'gabigames_processador.pickle',  # noqa
+                   'https://www.gabigames.gg/informatica/processadores', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+
+
+# ----------------Memoria----------------
+
+web_scraping_gabigames('Memory', 'Gabi Games', 'gabigames_memory.pickle',  # noqa
+                   'https://www.gabigames.gg/loja/catalogo.php?loja=1177600&categoria=21&pg=1', 50, DATABASE_NAME_MEMORY)  # noqa
+
+web_scraping_gabigames('Memory', 'Gabi Games', 'gabigames_memory.pickle',  # noqa
+                   'https://www.gabigames.gg/loja/catalogo.php?loja=1177600&categoria=21&pg=2', 50, DATABASE_NAME_MEMORY)  # noqa

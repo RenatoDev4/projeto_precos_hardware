@@ -23,4 +23,10 @@ def processadores(request):
     if loja:
         resultados = resultados.filter(loja__icontains=loja)
 
-    return render(request, 'processadores/pages/index.html', {'resultados': resultados})  # noqa
+    # Create a dictionary with the infomations selected by the user
+    selecionados = {
+        'modelo': modelo,
+        'loja': loja,
+    }
+
+    return render(request, 'processadores/pages/index.html', {'resultados': resultados, 'selecionados': selecionados})  # noqa

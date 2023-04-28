@@ -2,53 +2,68 @@
 
 
 <div class="filtros_formulario placadevideo">
-    <br/>
-    <form method='get' action='.'>
-      <h5>Selecione um modelo:</h5>
-      <select id="select-modelo" name="select-modelo" >
+  <form method='get' action='.'>
+    <div class="input-group">
+      <label for="select-modelo">
+        <h5>Selecione um modelo:</h5>
+      </label>
+      <select id="select-modelo" name="select-modelo" class="select-menu">
+        <option value="">Todas as placas de vídeo</option>
       <optgroup label="Nvidia">
-        <option value="RTX 4090">RTX 4090</option>
-        <option value="RTX 4080">RTX 4080</option>
-        <option value="RTX 4070 ti">RTX 4070ti</option>
-        <option value="RTX 4070">RTX 4070</option>
-        <option value="RTX 3090 ti">RTX 3090ti</option>
-        <option value="RTX 3090">RTX 3090</option>
-        <option value="RTX 3080 ti">RTX 3080ti</option>
-        <option value="RTX 3080">RTX 3080</option>
-        <option value="RTX 3070">RTX 3070</option>
-        <option value="RTX 3070 ti">RTX 3070ti</option>
-        <option value="RTX 3060 ti">RTX 3060ti</option>
-        <option value="RTX 3060">RTX 3060</option>
-        <option value="RTX 3050">RTX 3050</option>
-        <option value="RTX 2060">RTX 2060</option>
-        <option value="GTX 1660">GTX 1660/Super/Ti</option>
-        <option value="GTX 1650">GTX 1650</option>
-        <option value="GTX 1630">GTX 1630</option>
+        <option value="RTX 4090" {% if selecionados.modelo == '4090' %}selected{% endif %}>RTX 4090</option>
+        <option value="RTX 4080" {% if selecionados.modelo == '4080' %}selected{% endif %}>RTX 4080</option>
+        <option value="RTX 4070 ti" {% if selecionados.modelo == 'RTX 4070 ti' %}selected{% endif %}>RTX 4070ti</option>
+        <option value="RTX 4070" {% if selecionados.modelo == 'RTX 4070' %}selected{% endif %}>RTX 4070</option>
+        <option value="RTX 3090 ti" {% if selecionados.modelo == 'RTX 3090 ti' %}selected{% endif %}>RTX 3090ti</option>
+        <option value="RTX 3090" {% if selecionados.modelo == 'RTX 3090' %}selected{% endif %}>RTX 3090</option>
+        <option value="RTX 3080 ti" {% if selecionados.modelo == 'RTX 3080 ti' %}selected{% endif %}>RTX 3080ti</option>
+        <option value="RTX 3080" {% if selecionados.modelo == 'RTX 3080' %}selected{% endif %}>RTX 3080</option>
+        <option value="RTX 3070 ti" {% if selecionados.modelo == 'RTX 3070 ti"' %}selected{% endif %}>RTX 3070ti</option>
+        <option value="RTX 3070" {% if selecionados.modelo == 'RTX 3070' %}selected{% endif %}>RTX 3070</option>
+        <option value="RTX 3060 ti" {% if selecionados.modelo == 'RTX 3060 ti' %}selected{% endif %}>RTX 3060ti</option>
+        <option value="RTX 3060" {% if selecionados.modelo == 'RTX 3060' %}selected{% endif %}>RTX 3060</option>
+        <option value="RTX 3050" {% if selecionados.modelo == 'RTX 3050' %}selected{% endif %}>RTX 3050</option>
+        <option value="RTX 2060" {% if selecionados.modelo == 'RTX 2060' %}selected{% endif %}>RTX 2060</option>
+        <option value="GTX 1660" {% if selecionados.modelo == 'GTX 1660' %}selected{% endif %}>GTX 1660/Super/Ti</option>
+        <option value="GTX 1650" {% if selecionados.modelo == 'GTX 1650' %}selected{% endif %}>GTX 1650</option>
+        <option value="GTX 1630" {% if selecionados.modelo == 'GTX 1630' %}selected{% endif %}>GTX 1630</option>
       <optgroup label="AMD">
-        <option value="RX 7900 XT">RX 7900XT/XTX</option>
-        <option value="RX 6900 XT">RX 6900/50XT</option>
-        <option value="RX 6800">RX 6800/XT</option>
-        <option value="RX 6750 XT">RX 6750XT</option>
-        <option value="RX 6700 XT">RX 6700XT</option>
-        <option value="RX 6650 XT">RX 6650XT</option>
-        <option value="RX 6600">RX 6600/XT</option>
-        <option value="RX 6500 XT">RX 6500XT</option>
-        <option value="RX 6400">RX 6400</option>
+        <option value="RX 7900 XT" {% if selecionados.modelo == 'RX 7900 XT' %}selected{% endif %}>RX 7900XT/XTX</option>
+        <option value="RX 6900 XT" {% if selecionados.modelo == 'RX 6900 XT' %}selected{% endif %}>RX 6900/50XT</option>
+        <option value="RX 6800" {% if selecionados.modelo == 'RX 6800' %}selected{% endif %}>RX 6800/XT</option>
+        <option value="RX 6750 XT" {% if selecionados.modelo == 'RX 6750 XT' %}selected{% endif %}>RX 6750XT</option>
+        <option value="RX 6700 XT" {% if selecionados.modelo == 'RX 6700 XT' %}selected{% endif %}>RX 6700XT</option>
+        <option value="RX 6650 XT" {% if selecionados.modelo == 'RX 6650 XT' %}selected{% endif %}>RX 6650XT</option>
+        <option value="RX 6600" {% if selecionados.modelo == 'RX 6600' %}selected{% endif %}>RX 6600/XT</option>
+        <option value="RX 6500 XT" {% if selecionados.modelo == 'RX 6500 XT' %}selected{% endif %}>RX 6500XT</option>
+        <option value="RX 6400" {% if selecionados.modelo == 'RX 6400' %}selected{% endif %}>RX 6400</option>
       </optgroup>
     </select>
-    <br>
-    
-    <br/>
-    <br/>
-    <h5>Selecione uma loja:</h5>
-    <select id="select-loja" name="select-loja">
+  </div>
+
+    <div class="input-group">
+      <label for="select-loja">
+        <h5>Selecione uma loja:</h5>
+      </label>
+      <select id="select-loja" name="select-loja" class="select-menu">
         <option value="">Todas as lojas</option>
-        <option value="Kabum">KabuM</option>
-        <option value="Pichau">Pichau</option>
-    </select>
-    <br/><br/>
+        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
+        <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
+        <option value="Terabyte" {% if selecionados.loja == 'Terabyte' %}selected{% endif %}>Terabyte</option>
+        <option value="AlligatorShop" {% if selecionados.loja == 'AlligatorShop' %}selected{% endif %}>AlligatorShop</option>
+        <option value="FGTEC" {% if selecionados.loja == 'FGTEC' %}selected{% endif %}>FGTEC</option>
+        <option value="Gabi Games" {% if selecionados.loja == 'Gabi Games' %}selected{% endif %}>Gabi Games</option>
+        <option value="GKInfoStore" {% if selecionados.loja == 'GKInfoStore' %}selected{% endif %}>GKInfoStore</option>
+        <option value="Guerra Digital" {% if selecionados.loja == 'Guerra Digital' %}selected{% endif %}>Guerra Digital</option>
+        <option value="INPOWER" {% if selecionados.loja == 'INPOWER' %}selected{% endif %}>INPOWER</option>
+        <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
+        <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
+      </select>
+  </div>
+
+    <br>
     <button type='submit'>Filtrar</button>
-</form>
+  </form>
 </div>
     
 <div id="tabela-de-dados"></div>

@@ -1,43 +1,60 @@
 {% load custom_filters %}
 
 <div class="filtros_formulario processadores">
-    <h3>Filtros</h3>
-    <br/>
-    <form method='get' action='.'>
-      <div class="input-group">
-    <h5>Selecione um modelo:</h5>
-    <select id="select-modelo" name="select-modelo" >
-    <optgroup label="Intel 12º Gen">
-      <option value="12100F">Processadores Core i3</option>
-      <option value="12400,12400F,12600K,12600KF">Processadores Core i5</option>
-      <option value="12700,12700K,12700F,12700KF">Processadores Core i7</option>
-      <option value="12900,12900K,12900KF">Processadores Core i9</option>
-    <optgroup label="Intel 13º Gen">
-      <option value="13100,13100f,13100F">Processadores Core i3</option>
-      <option value="13400,13400f,13400F,13400KF,13600K,13600KF">Processadores Core i5</option>
-      <option value="13700,13700F,13700f,13700K">Processadores Core i7</option>
-      <option value="13900,13900F,13900K,13900KS,13900KF">Processadores Core i9</option>
-    <optgroup label="Ryzen 5xxx">
-      <option value="5500,5600G,5600,5600X">Processadores Ryzen 5</option>
-      <option value="5700,5700x,5700X,5700g,5700G,5800,5800X,5800x,5800X3D">Processadores Ryzen 7</option>
-      <option value="5900X,5950X">Processadores Ryzen 9</option>
-    <optgroup label="Ryzen 7xxx">
-      <option value="7500,7600G,7600,7600X">Processadores Ryzen 5</option>
-      <option value="7700,7700x,7700X,7700g,7700G,7800,7800X,7800x,7800X3D">Processadores Ryzen 7</option>
-      <option value="7900,7900X,7950X,7900X3D,7950X3D">Processadores Ryzen 9</option>
-    </optgroup>
-    </select>
-    <br/>
-    <br/>
+  <form method="get" action=".">
     <div class="input-group">
-    <h5>Selecione uma loja:</h5>
-    <select id="select-loja" name="select-loja">
+      <label for="select-modelo">
+        <h5>Selecione um modelo:</h5>
+      </label>
+      <select id="select-modelo" name="select-modelo" class="select-menu">
+          <option value="">Todos processadores</option>
+        <optgroup label="Intel 12º Gen">
+          <option value="12100F" {% if selecionados.modelo == '12100F' %}selected{% endif %}>Processadores Core i3</option>
+          <option value="12400,12400F,12600K,12600KF" {% if selecionados.modelo == '12400,12400F,12600K,12600KF' %}selected{% endif %}>Processadores Core i5</option>
+          <option value="12700,12700K,12700F,12700KF" {% if selecionados.modelo == '12700,12700K,12700F,12700KF' %}selected{% endif %}>Processadores Core i7</option>
+          <option value="12900,12900K,12900KF" {% if selecionados.modelo == '12900,12900K,12900KF' %}selected{% endif %}>Processadores Core i9</option>
+        </optgroup>
+        <optgroup label="Intel 13º Gen">
+          <option value="13100,13100f,13100F" {% if selecionados.modelo == '13100,13100f,13100F' %}selected{% endif %}>Processadores Core i3</option>
+          <option value="13400,13400f,13400F,13400KF,13600K,13600KF" {% if selecionados.modelo == '13400,13400f,13400F,13400KF,13600K,13600KF' %}selected{% endif %}>Processadores Core i5</option>
+          <option value="13700,13700F,13700f,13700K" {% if selecionados.modelo == '13700,13700F,13700f,13700K' %}selected{% endif %}>Processadores Core i7</option>
+          <option value="13900,13900F,13900K,13900KS,13900KF" {% if selecionados.modelo == '13900,13900F,13900K,13900KS,13900KF' %}selected{% endif %}>Processadores Core i9</option>
+        </optgroup>
+        <optgroup label="Ryzen 5xxx">
+          <option value="5500,5600G,5600,5600X" {% if selecionados.modelo == '5500,5600G,5600,5600X' %}selected{% endif %}>Processadores Ryzen 5</option>
+          <option value="5700,5700x,5700X,5700g,5700G,5800,5800X,5800x,5800X3D" {% if selecionados.modelo == '5700,5700x,5700X,5700g,5700G,5800,5800X,5800x,5800X3D' %}selected{% endif %}>Processadores Ryzen 7</option>
+          <option value="5900X,5950X" {% if selecionados.modelo == '5900X,5950X' %}selected{% endif %}>Processadores Ryzen 9</option>
+        </optgroup>
+        <optgroup label="Ryzen 7xxx">
+          <option value="7500,7600G,7600,7600X" {% if selecionados.modelo == '7500,7600G,7600,7600X' %}selected{% endif %}>Processadores Ryzen 5</option>
+          <option value="7700,7700x,7700X,7700g,7700G,7800,7800X,7800x,7800X3D" {% if selecionados.modelo == '7700,7700x,7700X,7700g,7700G,7800,7800X,7800x,7800X3D' %}selected{% endif %}>Processadores Ryzen 7</option>
+          <option value="7900,7900X,7950X,7900X3D,7950X3D" {% if selecionados.modelo == '7900,7900X,7950X,7900X3D,7950X3D' %}selected{% endif %}>Processadores Ryzen 9</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="select-loja">
+        <h5>Selecione uma loja:</h5>
+      </label>
+      <select id="select-loja" name="select-loja" class="select-menu">
         <option value="">Todas as lojas</option>
-        <option value="Kabum">KabuM</option>
-        <option value="Pichau">Pichau</option>
-    </select>
-    <br/><br/>
-    <button type='submit'>Filtrar</button>
+        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
+        <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
+        <option value="Terabyte" {% if selecionados.loja == 'Terabyte' %}selected{% endif %}>Terabyte</option>
+        <option value="AlligatorShop" {% if selecionados.loja == 'AlligatorShop' %}selected{% endif %}>AlligatorShop</option>
+        <option value="FGTEC" {% if selecionados.loja == 'FGTEC' %}selected{% endif %}>FGTEC</option>
+        <option value="Gabi Games" {% if selecionados.loja == 'Gabi Games' %}selected{% endif %}>Gabi Games</option>
+        <option value="GKInfoStore" {% if selecionados.loja == 'GKInfoStore' %}selected{% endif %}>GKInfoStore</option>
+        <option value="Guerra Digital" {% if selecionados.loja == 'Guerra Digital' %}selected{% endif %}>Guerra Digital</option>
+        <option value="INPOWER" {% if selecionados.loja == 'INPOWER' %}selected{% endif %}>INPOWER</option>
+        <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
+        <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
+      </select>
+  </div>
+
+  <br>
+  <button type='submit'>Filtrar</button>
 </form>
 </div>
     

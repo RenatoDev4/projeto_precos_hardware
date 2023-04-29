@@ -157,3 +157,21 @@ URL_BASE_BUSCA = 'https://www.kabum.com.br/busca/'
 
 # web_scraping_kabum('Memória 2666MHz', 'Kabum', 'kabum_memoria.pickle', URL_BASE,  # noqa
 #                    'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=6&page_size=100&facet_filters=e30=&sort=most_searched', 50, DATABASE_NAME_MEMORY)  # noqa
+
+
+# ------------- Placa mãe -----------------#
+
+# web_scraping_kabum('Placa Mãe', 'Kabum', 'kabum_placamae.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/placas-mae?page_number=1&page_size=100&facet_filters=&sort=most_searched', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+# web_scraping_kabum('Placa Mãe', 'Kabum', 'kabum_placamae.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/placas-mae?page_number=2&page_size=100&facet_filters=&sort=most_searched', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+# web_scraping_kabum('Placa Mãe', 'Kabum', 'kabum_placamae.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/placas-mae?page_number=3&page_size=100&facet_filters=&sort=most_searched', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+# web_scraping_kabum('Placa Mãe', 'Kabum', 'kabum_placamae.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/placas-mae?page_number=4&page_size=100&facet_filters=&sort=most_searched', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+# web_scraping_kabum('Placa Mãe', 'Kabum', 'kabum_placamae.pickle', URL_BASE,  # noqa
+#                    'https://www.kabum.com.br/hardware/placas-mae?page_number=5&page_size=100&facet_filters=&sort=most_searched', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

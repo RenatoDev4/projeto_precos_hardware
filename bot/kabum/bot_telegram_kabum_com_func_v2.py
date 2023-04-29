@@ -117,23 +117,22 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
             url_marca = dic_produtos['url_marca'][i]
             loja = dic_produtos['loja'][i]
             valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória'):
-                cursor.execute(
-                    f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-                result = cursor.fetchone()
+            cursor.execute(
+                f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+            result = cursor.fetchone()
 
-                if result is None:
-                    # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-                    if preco != 0:
-                        cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                            marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                        connection.commit()
-                else:
-                    # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-                    if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                        cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                            preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
-                        connection.commit()
+            if result is None:
+                # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+                if preco != 0:
+                    cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+                        marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                    connection.commit()
+            else:
+                # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+                if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                    cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                        preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+                    connection.commit()
 
         cursor.close()
 

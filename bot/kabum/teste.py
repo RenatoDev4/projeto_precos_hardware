@@ -14,10 +14,10 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.kabum.com.br/hardware/memoria-ram/ddr-4?page_number=1&page_size=50&facet_filters=eyJWZWxvY2lkYWRlIjpbIjI2NjYgTUh6Il0sIkNhcGFjaWRhZGUiOlsiOCBHQiAoMXggOEdCKSJdfQ==&sort=most_searched'
+url_pag = 'https://www.kabum.com.br/hardware/placas-mae?page_number=3&page_size=100&facet_filters=&sort=most_searched'
 url_base = 'https://www.kabum.com.br'
 loja = 'KabuM'
-database = 'processadores_searchprocessors'
+database = 'placamae_searchmotherboards'
 
 # Database configuration
 DB_NAME = 'db.sqlite3'

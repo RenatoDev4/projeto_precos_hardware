@@ -11,6 +11,7 @@ DATABASE_NAME_MEMORY = 'memoria_searchmemory'
 URL_BASE_VGA = 'https://www.terabyteshop.com.br/hardware/placas-de-video'
 URL_BASE_PROC = 'https://www.terabyteshop.com.br/hardware/processadores'  # noqa
 URL_BASE_MEMORY = 'https://www.terabyteshop.com.br/hardware/memorias/ddr4'
+URL_BASE_MOTHERBOARD = 'https://www.terabyteshop.com.br/hardware/placas-mae'
 
 # ------------- RTX 4xxx -----------------#
 
@@ -115,3 +116,8 @@ web_scraping_terabyte('Processador', 'Terabyte', 'terabyte_processador.pickle',
 
 web_scraping_terabyte('Memoria', 'Terabyte', 'terabyte_memoria.pickle',
                    URL_BASE_MEMORY, 50, DATABASE_NAME_MEMORY)  # noqa
+
+# ------------- Placa Mãe -----------------#
+
+web_scraping_terabyte('Placa Mãe', 'Terabyte', 'terabyte_placamae.pickle',
+                   URL_BASE_MOTHERBOARD, 50, DATABASE_NAME_MOTHERBOARD)  # noqa

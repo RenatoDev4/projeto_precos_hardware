@@ -99,5 +99,12 @@ URL_BASE = 'https://patoloco.com.br/produtos/placa-de-video?product-filter=%7B"C
 web_scraping_patoloco('Processador', 'PatoLoco', 'patoloco_processador.pickle',  # noqa
                    'https://patoloco.com.br/produtos/processadores', 50, DATABASE_NAME_PROCESSADOR)  # noqa
 
+# ------------- Memória ----------------- #
+
 web_scraping_patoloco('Processador', 'PatoLoco', 'patoloco_memory.pickle',  # noqa
                    'https://patoloco.com.br/produtos/memorias', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# ------------- Placa Mãe ----------------- #
+
+web_scraping_patoloco('Placa Mãe', 'PatoLoco', 'patoloco_placamae.pickle',  # noqa
+                   'https://patoloco.com.br/produtos/placas-mae', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

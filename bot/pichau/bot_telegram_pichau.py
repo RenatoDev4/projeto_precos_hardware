@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import cloudscraper
+import requests
 import telebot
 from bs4 import BeautifulSoup
 
@@ -23,28 +24,63 @@ DB_FILE = DB_NAME
 
 def web_scraping_pichau(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
+    # Database configuration
+    DB_NAME = 'db.sqlite3'
+    DB_FILE = DB_NAME
+
     # Define Global Variables
     global message
     global sent_messages
     global sent_messages_file
 
-    # Inform that it is a navigator and save message
-    headers = {
-        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
-                Chrome/109.0.0.0 Safari/537.36"}
+    # Save message
     if os.path.exists(sent_message_file):
         with open(sent_message_file, "rb") as f:
             sent_messages = pickle.load(f)
     else:
         sent_messages = []
 
-    # Begin web scraping
-    scraper = cloudscraper.create_scraper(
-        delay=10, browser='chrome', interpreter='nodejs', captcha={'provider': 'return_response'})
-    site = scraper.get(url_pag, headers=headers)
+    # Begin web scraping annd inform that it is a navigator
+    headers = {
+        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+                AppleWebKit/537.36 (KHTML, like Gecko) \
+                Chrome/109.0.0.0 Safari/537.36"}
+    # Sua chave de API 2captcha
+    API_KEY = '3321608b9bb8343b2d991f76d1ac91fa'
 
-    soup = BeautifulSoup(site.content, 'html.parser')
+    # Cria um objeto cloudscraper
+    scraper = cloudscraper.create_scraper()
+
+    # Verifica se já tem o cookie do captcha salvo
+    cookies = {}
+    try:
+        with open('captcha_cookies_pichau.txt', 'r') as f:
+            for line in f:
+                name, value = line.strip().split('\t', 1)
+                cookies[name] = value
+    except FileNotFoundError:
+        pass
+
+    # Obtém o token do site usando o 2captcha
+    if 'r_captcha' not in cookies:
+        response = requests.get(
+            f'https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey=6LdAUwoUAAAAAJvsFUJRaPMG9u8GqHJbE3q5Q5xN&pageurl={url_pag}')  # noqa
+        token = response.text.split('|')[1]
+        cookies['r_captcha'] = token
+        # Salva o cookie do captcha
+        with open('captcha_cookies_pichau.txt', 'w') as f:
+            for name, value in cookies.items():
+                f.write(f'{name}\t{value}\n')
+    else:
+        token = cookies['r_captcha']
+
+    # Envia uma solicitação usando o token e o cookie do captcha
+    headers = {'referer': url_pag}
+    params = {'g-recaptcha-response': token}
+    response = scraper.get(url_pag, headers=headers,
+                           params=params, cookies=cookies)
+
+    soup = BeautifulSoup(response.content, 'html.parser')
 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}

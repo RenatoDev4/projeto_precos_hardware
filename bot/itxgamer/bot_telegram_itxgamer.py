@@ -15,10 +15,10 @@ message = ''
 sent_messages = []
 sent_messages_file = ''
 
-# Function Web Scraping fgtec.com.br
+# Function Web Scraping itxgamer.com.br
 
 
-def web_scraping_fgtec(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
+def web_scraping_itxgamer(placa, loja, sent_message_file, url_pag, price_sent_msg, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
@@ -46,51 +46,55 @@ def web_scraping_fgtec(placa, loja, sent_message_file, url_pag, price_sent_msg, 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
     ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
     produto = soup.find_all('div', class_=re.compile(
-        'col-6 col-sm-6 col-md-4 col-lg-3 mb-4'))
+        'col-6 col-sm-6 col-md-4 col-lg-4 mb-4'))
 
     for produto in produto:
         # Get product name
-        marca = produto.find('div', class_=re.compile(
-            'product-title text-center mb-4')).get_text().strip()
+        marca = produto.find('h2', class_=re.compile('text')).get_text().strip()  # noqa
 
         # Get product price (cash)
-        preco = produto.find('span', class_=re.compile(
-            'price total'))
-        if preco is not None:
-            preco = preco.get_text().strip()
+        preco_vista = produto.find('div', class_='billet')
+        if preco_vista is not None:
+            preco = preco_vista.find('span', class_='price total')
+            if preco is not None:
+                preco = preco.get_text().strip()
+            else:
+                preco = '0.0'
         else:
             preco = '0.0'
-
-        # Remove special characters from the price to save in the database
         valor_preco_avista_str = re.sub(
             r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
         valor_preco_avista = float(valor_preco_avista_str)
 
+        # Variable exclusive to 'message' to be sent to telegram
+        preco_cash_msg = preco
+
         # Get produtct price (credit card)
-        preco2 = produto.find('div', class_=re.compile('creditcard'))
-        if preco2 is not None:
-            valor_preco_prazo_tag = preco2.find(
-                'span', class_='price total')
-            valor_preco_prazo = valor_preco_prazo_tag.get_text(
-            ).strip() if valor_preco_prazo_tag is not None else None
+        preco2_prazo = produto.find('div', class_='creditcard')
+        if preco2_prazo is not None:
+            preco2 = preco2_prazo.find(
+                'span', class_=re.compile('price total'))
+            if preco2 is not None:
+                preco2 = preco2.get_text().strip()
+            else:
+                preco2 = '0.0'
         else:
-            valor_preco_prazo = None
+            preco2 = '0.0'
+        valor_preco_prazo_str = re.sub(
+            r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
+        valor_preco_prazo = float(valor_preco_prazo_str)
 
-        if valor_preco_prazo:
-            valor_preco_prazo_str = re.sub(
-                r'[^\d,.]', '', valor_preco_prazo).replace(',', '.').replace('.', '')  # noqa
-            valor_preco_prazo = float(valor_preco_prazo_str) / 100
-        else:
-            valor_preco_prazo = '0.0'
+        # Variable exclusive to 'message' to be sent to telegram
+        preco_card_msg = preco2
 
-        # Get product url
-        url_produto = produto.find('a')['href']
-        url_completa = 'https://www.fgtec.com.br' + url_produto
+        # Get URL's of products
+
+        url_marca = produto.find('a')['href']
 
         # Add data to dictionary
         dic_produtos['marca'].append(marca)
         dic_produtos['preco'].append(valor_preco_avista)
-        dic_produtos['url_marca'].append(url_completa)
+        dic_produtos['url_marca'].append(url_marca)
         dic_produtos['loja'].append(loja)
         dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
 
@@ -101,7 +105,7 @@ def web_scraping_fgtec(placa, loja, sent_message_file, url_pag, price_sent_msg, 
 
         for i in range(len(dic_produtos['marca'])):
             marca = dic_produtos['marca'][i]
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe'):
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('Placa Mae'):  # noqa
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]
@@ -127,12 +131,12 @@ def web_scraping_fgtec(placa, loja, sent_message_file, url_pag, price_sent_msg, 
         cursor.close()
 
         # Product model message and save in specific directory
-        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {valor_preco_avista} \n<b>Preço a prazo:</b> R$ {valor_preco_prazo} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
+        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> R$ {preco_cash_msg} \n<b>Preço a prazo:</b> R$ {preco_card_msg} \n<b>Loja:</b> {loja} \n\n<a href='{url_marca}'>Link do Produto</a>"  # noqa
         sent_messages_file = ROOT_DIR_MESSAGES / \
             'messages_telegram' / sent_message_file
 
         # Condictions to send message (VGA Model, Price, etc)
-        if placa in marca and marca.startswith('Placa de Vídeo') and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
+        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
             send_message(message, sent_messages_file)
 
 

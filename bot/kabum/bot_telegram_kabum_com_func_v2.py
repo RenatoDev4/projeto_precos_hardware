@@ -1,5 +1,4 @@
 import locale
-import math
 import os
 import pickle
 import re
@@ -7,7 +6,6 @@ import sqlite3
 from pathlib import Path
 
 import requests  # type: ignore
-import telebot
 from bs4 import BeautifulSoup
 
 # Global Variables
@@ -65,10 +63,6 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
             valor_preco_avista = float(valor_preco_avista_str)
         else:
             valor_preco_avista = 0.0
-
-        # Variables exclusive to sending messages to telegram group:
-        preco_cash_msg = locale.currency(
-            valor_preco_avista, grouping=True).replace(' ', '')
 
         url_completa = (
             url_base + str(produto.find('a', href=True)['href']))
@@ -135,41 +129,3 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
                     connection.commit()
 
         cursor.close()
-
-        # Product model message and save in specific directory
-        message = f"<b>Modelo:</b> {marca} \n<b>Preço a vista:</b> {valor_preco_avista} \n<b>Preço a prazo:</b> {valor_preco_prazo} \n<b>Loja:</b> {loja} \n\n<a href='{url_completa}'>Link do Produto</a>"  # noqa
-        sent_messages_file = ROOT_DIR_MESSAGES / \
-            'messages_telegram' / sent_message_file
-
-        # Condictions to send message (VGA Model, Price, etc)
-        if placa in marca and valor_preco_avista > 1 and valor_preco_avista <= price_sent_msg and message not in sent_messages:  # type: ignore  # noqa
-            send_message(message, sent_messages_file)
-
-
-# Function to send message to telegram
-
-
-def send_message(mensagem, sent_messages_file):
-    apiToken = '5498131794:AAG70P3S4ELaASJM1e9tOpcCX4tSW7O9vDs'
-    chatID = '-1001826530191'
-    bot = telebot.TeleBot(apiToken)
-
-    # Verify if the file exists
-    if os.path.isfile(sent_messages_file):
-        # Load previously sent messages
-        with open(sent_messages_file, "rb") as f:
-            sent_messages = pickle.load(f)
-    else:
-        # If file does not exist, starts an empty list
-        sent_messages = []
-
-    # Verify if the message was sent before
-    if mensagem not in sent_messages:
-        # Send the message and add it to the sent messages list
-        bot.send_message(
-            chat_id=chatID, text=mensagem, parse_mode='HTML')
-        sent_messages.append(mensagem)
-        with open(sent_messages_file, "wb") as f:
-            pickle.dump(sent_messages, f)
-    else:
-        pass

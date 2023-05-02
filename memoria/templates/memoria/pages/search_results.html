@@ -1,0 +1,43 @@
+{% load custom_filters %}
+{% include 'memoria/partials/head.html' %}
+
+<div class="formulario_busca_inside">
+    <form method="GET" action="{% url 'search' %}">
+      <div class="input-group">
+          <h5>Faça uma busca encontrar o a placa mãe que tenha interesse</h5>
+        <input type="text" name="q" placeholder="Digite o modelo desejado">
+        <button type="submit" class="botao_busca">Buscar</button>
+        </form>
+    </div>
+
+
+
+</div>
+    
+    <div id="tabela-de-dados"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Loja</th>
+                <th>Preço</th>
+                <th>Valor do preço a prazo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resultado in results %}
+            <tr>
+                <td><a href="{{ resultado.url_marca }}" target="_blank">{{ resultado.marca }}</a></td>
+                <td>{{ resultado.loja }}</td>
+                <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+                <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum resultado encontrado. <a href="/memoria">Clique aqui</a> para voltar ao menu completo ou busque novamente um modelo no campo de busca.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% include 'memoria/partials/footer.html' %}

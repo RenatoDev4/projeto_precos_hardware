@@ -110,3 +110,10 @@ web_scraping_gabigames('Memory', 'Gabi Games', 'gabigames_memory.pickle',  # noq
 
 web_scraping_gabigames('Memory', 'Gabi Games', 'gabigames_memory.pickle',  # noqa
                    'https://www.gabigames.gg/loja/catalogo.php?loja=1177600&categoria=21&pg=2', 50, DATABASE_NAME_MEMORY)  # noqa
+
+
+# ---------------- Placa Mãe ----------------
+
+
+web_scraping_gabigames('Placa Mãe', 'Gabi Games', 'gabigames_placamae.pickle',  # noqa
+                   'https://www.gabigames.gg/hardware/placa-mae', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

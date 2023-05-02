@@ -84,6 +84,10 @@
           <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
           <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
       </tr>
+      {% empty %}
+      <tr>
+          <td colspan="4">Nenhum modelo foi encontrado no banco de dados. &#128557;</td>
+      </tr>
       {% endfor %}
   </tbody>
 </table>

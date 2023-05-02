@@ -1,5 +1,15 @@
 {% load custom_filters %}
 
+<div class="formulario_busca">
+  <form method="GET" action="{% url 'search_motherboards' %}">
+    <div class="input-group">
+      <h5>Encontre uma placa mãe ou chipset específico</h5>
+      <input type="text" name="q" placeholder="Digite o modelo desejado">
+      <button type="submit" class="botao_busca">Buscar</button>
+    </div>
+  </form>
+</div>
+
 <div class="filtros_formulario processador">
   <form method='get' action='.'>
     <div class="input-group">
@@ -30,7 +40,7 @@
         <option value="Z690" class="intel" {% if selecionados.modelo == 'Z690' %}selected{% endif %}>Z690</option>  
         <option value="Z790" class="intel" {% if selecionados.modelo == 'Z790' %}selected{% endif %}>Z790</option>
       <optgroup label="AMD Chipset">
-        <option value="A320, A320m, A320M" class="amd" {% if selecionados.modelo == 'A320' %}selected{% endif %}>A320</option>
+        <option value="A320" class="amd" {% if selecionados.modelo == 'A320' %}selected{% endif %}>A320</option>
         <option value="A520" class="amd" {% if selecionados.modelo == 'A520' %}selected{% endif %}>A520</option>
         <option value="B450" class="amd" {% if selecionados.modelo == 'B450' %}selected{% endif %}>B450</option>
         <option value="B550" class="amd" {% if selecionados.modelo == 'B550' %}selected{% endif %}>B550</option>
@@ -41,14 +51,14 @@
         <option value="X570" class="amd" {% if selecionados.modelo == 'X570' %}selected{% endif %}>X570</option>
         <option value="X670" class="amd" {% if selecionados.modelo == 'X670' %}selected{% endif %}>X670</option>
       </optgroup> 
-      </select>
-    </div>
+    </select>
+  </div>
 
-    <div class="input-group">
-      <label for="select-loja">
-        <h5>Selecione uma loja:</h5>
-      </label>
-      <select id="select-loja" name="select-loja" class="select-menu">
+  <div class="input-group">
+    <label for="select-loja">
+      <h5>Selecione uma loja:</h5>
+    </label>
+    <select id="select-loja" name="select-loja" class="select-menu">
         <option value="">Todas as lojas</option>
         <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
         <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
@@ -62,14 +72,14 @@
         <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
         <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
       </select>
-  </div>
+    </div>
 
     <br>
     <button type='submit'>Filtrar</button>
   </form>
-
-
 </div>
+
+
     
     <div id="tabela-de-dados"></div>
     <table>
@@ -88,6 +98,10 @@
               <td>{{ resultado.loja }}</td>
               <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
               <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="4">Nenhum modelo foi encontrado no banco de dados. &#128557;</td>
           </tr>
           {% endfor %}
       </tbody>

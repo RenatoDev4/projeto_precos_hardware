@@ -21,9 +21,6 @@ def memoria(request):
             condicoes |= Q(marca__icontains=valor)
         resultados = resultados.filter(condicoes)  # noqa
 
-    if numero_de_pentes:
-        resultados = resultados.filter(marca__icontains=numero_de_pentes)
-
     if loja:
         resultados = resultados.filter(loja__icontains=loja)
 
@@ -37,7 +34,14 @@ def memoria(request):
         'loja': loja,
     }
 
-    if not resultados:
-        return render(request, 'memoria/pages/empty.html', {'selecionados': selecionados})  # noqa
-
     return render(request, 'memoria/pages/index.html', {'resultados': resultados, 'selecionados': selecionados})  # noqa
+
+
+def search(request):
+    query = request.GET.get('q')
+    results = None
+    if query:
+        results = SearchMemory.objects.filter(marca__icontains=query).exclude(
+            preco=0).exclude(valor_preco_prazo=0)[:30]
+
+    return render(request, 'memoria/pages/search_results.html', {'results': results})

@@ -94,9 +94,14 @@ URL_BASE = 'https://www.fgtec.com.br/produtos?q='
 # --------------------Processadores---------------------#
 
 web_scraping_fgtec('Processador', 'FGTEC', 'fgtec_processador.pickle',  # noqa
-                    'https://www.fgtec.com.br/processador-1?limit=48', 875, DATABASE_NAME_PROCESSADOR)  # noqa
+                    'https://www.fgtec.com.br/processador-1?limit=48', 50, DATABASE_NAME_PROCESSADOR)  # noqa
 
 # --------------------Memoria---------------------#
 
 web_scraping_fgtec('Memoria', 'FGTEC', 'fgtec_memoria.pickle',  # noqa
-                    'https://www.fgtec.com.br/memoria-ram-1?limit=48', 875, DATABASE_NAME_MEMORY)  # noqa
+                    'https://www.fgtec.com.br/memoria-ram-1?limit=48', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# --------------------Placa Mãe---------------------#
+
+web_scraping_fgtec('Placa Mãe', 'FGTEC', 'fgtec_placamae.pickle',  # noqa
+                    'https://www.fgtec.com.br/placa-mae-1?limit=48', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

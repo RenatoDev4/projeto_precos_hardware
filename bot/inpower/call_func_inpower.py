@@ -109,3 +109,14 @@ web_scraping_inpower('Processador', 'INPOWER', 'inpower_processador.pickle',  # 
 
 web_scraping_inpower('Memoria', 'INPOWER', 'inpower_memoria.pickle',  # noqa
                    'https://www.inpower.com.br/hardware/memorias/memoria-ddr4', 50, DATABASE_NAME_MEMORY)  # noqa
+
+web_scraping_inpower('Memoria', 'INPOWER', 'inpower_memoria.pickle',  # noqa
+                   'https://www.inpower.com.br/hardware/memorias/memoria-ddr5', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# ------------- Memoria ----------------------- #
+
+web_scraping_inpower('Placa Mãe', 'INPOWER', 'inpower_placa_mae.pickle',  # noqa
+                   'https://www.inpower.com.br/hardware/placas-mae', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+web_scraping_inpower('Placa Mãe', 'INPOWER', 'inpower_placa_mae.pickle',  # noqa
+                   'https://www.inpower.com.br/hardware/placas-mae?pg=2', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

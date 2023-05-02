@@ -108,3 +108,12 @@ web_scraping_gkinfostore('Memoria', 'GKInfoStore', 'gkinfostore_memoria.pickle',
 
 web_scraping_gkinfostore('Memoria', 'GKInfoStore', 'gkinfostore_memoria.pickle',  # noqa
                    'https://www.gkinfostore.com.br/memoria?pagina=2', 50, DATABASE_NAME_MEMORY)  # noqa
+
+
+# -------------- Placa Mãe ----------------
+
+web_scraping_gkinfostore('Placa Mãe', 'GKInfoStore', 'gkinfostore_placamae.pickle',  # noqa
+                   'https://www.gkinfostore.com.br/placa-mae', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+web_scraping_gkinfostore('Placa Mãe', 'GKInfoStore', 'gkinfostore_placamae.pickle',  # noqa
+                   'https://www.gkinfostore.com.br/placa-mae?pagina=2', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

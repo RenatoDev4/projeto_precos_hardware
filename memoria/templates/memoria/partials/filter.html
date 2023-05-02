@@ -1,5 +1,15 @@
 {% load custom_filters %}
 
+<div class="formulario_busca">
+  <form method="GET" action="{% url 'search' %}">
+    <div class="input-group">
+      <h5>Encontre uma memória específica</h5>
+      <input type="text" name="q" placeholder="Digite o modelo desejado">
+      <button type="submit" class="botao_busca">Buscar</button>
+    </div>
+  </form>
+</div>
+
 <div class="filtros_formulario memorias">
   <form method='get' action='.'>
     <div class="input-group">
@@ -20,24 +30,13 @@
           <option value="4600MHz" {% if selecionados.modelo == '4600MHz' %}selected{% endif %}>Memórias 4600MHz</option>
           <option value="4800MHz" {% if selecionados.modelo == '4800MHz' %}selected{% endif %}>Memórias 4800MHz</option>
           <option value="6000MHz" {% if selecionados.modelo == '6000MHz' %}selected{% endif %}>Memórias 6000MHz</option>
+        <optgroup label="Memórias DDR5">
+          <option value="4800MHz" {% if selecionados.modelo == '4800MHz' %}selected{% endif %}>Memórias 4800MHz</option>
+          <option value="5200MHz" {% if selecionados.modelo == '5200MHz' %}selected{% endif %}>Memórias 5200MHz</option>
+          <option value="5600MHz" {% if selecionados.modelo == '5600MHz' %}selected{% endif %}>Memórias 5600MHz</option>
+          <option value="6000MHz" {% if selecionados.modelo == '6000MHz' %}selected{% endif %}>Memórias 6000MHz</option>
+          <option value="6200MHz" {% if selecionados.modelo == '6200MHz' %}selected{% endif %}>Memórias 6200MHz</option>
         </optgroup>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="select-numero-de-pentes">
-        <h5>Quantidade de memória?</h5>
-      </label>
-      <select id="select-numero-de-pentes" name="select-numero-de-pentes" class="select-menu">
-        <option value="8GB" {% if selecionados.numero_de_pentes == '8GB' %}selected{% endif %}>1x 8GB</option>
-        <option value="16GB (2x8GB)" {% if selecionados.numero_de_pentes == '16GB (2x8GB)' %}selected{% endif %}>2x 8GB (16GB)</option>
-        <option value="32GB (4x8GB)" {% if selecionados.numero_de_pentes == '32GB (4x8GB)' %}selected{% endif %}>4x 8GB (32GB)</option>
-        <option value="16GB" {% if selecionados.numero_de_pentes == '16GB' %}selected{% endif %}>1x 16GB</option>
-        <option value="32GB (2x16GB)" {% if selecionados.numero_de_pentes == '32GB (2x16GB)' %}selected{% endif %}>2x 16GB (32GB)</option>
-        <option value="64GB (4x16GB)" {% if selecionados.numero_de_pentes == '64GB (4x16GB)' %}selected{% endif %}>4x 16GB (64GB)</option>
-        <option value="32GB" {% if selecionados.numero_de_pentes == '32GB' %}selected{% endif %}>1x 32GB</option>
-        <option value="64GB (2x32GB)" {% if selecionados.numero_de_pentes == '64GB (2x32GB)' %}selected{% endif %}>2x 32GB (64GB)</option>
-        <option value="128GB (4x32GB)" {% if selecionados.numero_de_pentes == '128GB (4x32GB)' %}selected{% endif %}>4x 32GB (128GB)</option>        
       </select>
     </div>
 
@@ -84,6 +83,10 @@
               <td>{{ resultado.loja }}</td>
               <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
               <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="4">Nenhum modelo foi encontrado no banco de dados. &#128557;</td>
           </tr>
           {% endfor %}
       </tbody>

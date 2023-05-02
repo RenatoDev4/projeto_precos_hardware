@@ -58,6 +58,7 @@ for produto in produto:
     dic_produtos['loja'].append(loja)
 
     preco2 = soup_2.find('b', {'class': 'regularPrice'})
+    valor_preco_prazo = 0.0  # initialize with default value
     if preco2:
         preco2 = preco2.get_text()
         valor_preco_prazo_str = re.sub(
@@ -71,50 +72,46 @@ for produto in produto:
     else:
         dic_produtos['valor_preco_prazo'].append(0.0)
 
-    # Variables exclusive to sending messages to telegram group:
-    preco_card_msg = locale.currency(
-        valor_preco_prazo, grouping=True).replace(' ', '')  # type: ignore # noqa
-
     # Get URL's of products
 
     url_find = produto.find('a')['href']
     url_completa = (url_base + str(url_find))
 
-    # Add data to dictionary
-    dic_produtos['marca'].append(marca)
-    dic_produtos['preco'].append(valor_preco_avista)
-    dic_produtos['url_marca'].append(url_completa)
-    dic_produtos['loja'].append(loja)
-    dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+    # # Add data to dictionary
+    # dic_produtos['marca'].append(marca)
+    # dic_produtos['preco'].append(valor_preco_avista)
+    # dic_produtos['url_marca'].append(url_completa)
+    # dic_produtos['loja'].append(loja)
+    # dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
 
-    # forwarding the data to the database
+    # # forwarding the data to the database
 
-    connection = sqlite3.connect(DB_FILE)
-    cursor = connection.cursor()
+    # connection = sqlite3.connect(DB_FILE)
+    # cursor = connection.cursor()
 
-    for i in range(len(dic_produtos['marca'])):
-        marca = dic_produtos['marca'][i]
-        preco = dic_produtos['preco'][i]
-        url_marca = dic_produtos['url_marca'][i]
-        loja = dic_produtos['loja'][i]
-        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
-        cursor.execute(
-            f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-        result = cursor.fetchone()
+    # for i in range(len(dic_produtos['marca'])):
+    #     marca = dic_produtos['marca'][i]
+    #     preco = dic_produtos['preco'][i]
+    #     url_marca = dic_produtos['url_marca'][i]
+    #     loja = dic_produtos['loja'][i]
+    #     valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+    #     cursor.execute(
+    #         f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+    #     result = cursor.fetchone()
 
-        if result is None:
-            # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-            if preco != 0:
-                cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                    marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                connection.commit()
-        else:
-            # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-            if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-                cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-                    preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
-                connection.commit()
+    #     if result is None:
+    #         # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+    #         if preco != 0:
+    #             cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
+    #                 marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+    #             connection.commit()
+    #     else:
+    #         # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+    #         if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+    #             cursor.execute(f"UPDATE {database} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+    #                 preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+    #             connection.commit()
 
-    cursor.close()
+    # cursor.close()
 
-    print(marca, preco_cash_msg, preco_card_msg)
+    print(marca)

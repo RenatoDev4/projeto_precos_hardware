@@ -78,12 +78,20 @@ URL_BASE = 'https://www.alligatorshop.com.br/'
 #                    URL_BASE + 'radeon-rx-6600-xt', 2350, DATABASE_NAME_VGA)  # noqa
 
 
-# ------------- Processadores -----------------#
+# # ------------- Processadores -----------------#
 
-web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
-                   'https://www.alligatorshop.com.br/processador?limit=36', 50, DATABASE_NAME_PROCESSADOR)  # noqa
+# web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+#                    'https://www.alligatorshop.com.br/processador?limit=36', 50, DATABASE_NAME_PROCESSADOR)  # noqa
 
-# ------------- Memorias DDR4 - DDR5 -----------------#
+# # ------------- Memorias DDR4 - DDR5 -----------------#
 
-web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
-                   'https://www.alligatorshop.com.br/memoria-ram?limit=36', 50, DATABASE_NAME_MEMORY)  # noqa
+# web_scraping_alligatorshop('Processador Intel Core', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+#                    'https://www.alligatorshop.com.br/memoria-ram?limit=36', 50, DATABASE_NAME_MEMORY)  # noqa
+
+# ------------- Placa Mãe -----------------#
+
+web_scraping_alligatorshop('Placa Mãe', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+                   'https://www.alligatorshop.com.br/intel', 50, DATABASE_NAME_MOTHERBOARD)  # noqa
+
+web_scraping_alligatorshop('Placa Mãe', 'AlligatorShop', 'alligator_processador.pickle',  # noqa
+                   'https://www.alligatorshop.com.br/placa-mae', 50, DATABASE_NAME_MOTHERBOARD)  # noqa

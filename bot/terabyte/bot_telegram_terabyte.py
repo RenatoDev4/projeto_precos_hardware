@@ -6,7 +6,6 @@ import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List
 
-import cloudscraper
 import requests  # type: ignore
 import telebot
 from bs4 import BeautifulSoup
@@ -42,46 +41,11 @@ def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_ms
     else:
         sent_messages = []
 
-    # Begin web scraping annd inform that it is a navigator
-    headers = {
-        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-                AppleWebKit/537.36 (KHTML, like Gecko) \
-                Chrome/109.0.0.0 Safari/537.36"}
-    # Sua chave de API 2captcha
-    API_KEY = '3321608b9bb8343b2d991f76d1ac91fa'
+    # Configurar o proxy
 
-    # Cria um objeto cloudscraper
-    scraper = cloudscraper.create_scraper()
-
-    # Verifica se já tem o cookie do captcha salvo
-    cookies = {}
-    try:
-        with open('captcha_cookies.txt', 'r') as f:
-            for line in f:
-                name, value = line.strip().split('\t', 1)
-                cookies[name] = value
-    except FileNotFoundError:
-        pass
-
-    # Obtém o token do site usando o 2captcha
-    if 'r_captcha' not in cookies:
-        response = requests.get(
-            f'https://2captcha.com/in.php?key={API_KEY}&method=userrecaptcha&googlekey=6LdAUwoUAAAAAJvsFUJRaPMG9u8GqHJbE3q5Q5xN&pageurl={url_pag}')  # noqa
-        token = response.text.split('|')[1]
-        cookies['r_captcha'] = token
-        # Salva o cookie do captcha
-        with open('captcha_cookies.txt', 'w') as f:
-            for name, value in cookies.items():
-                f.write(f'{name}\t{value}\n')
-    else:
-        token = cookies['r_captcha']
-
-    # Envia uma solicitação usando o token e o cookie do captcha
-    headers = {'referer': url_pag}
-    params = {'g-recaptcha-response': token}
-    response = scraper.get(url_pag, headers=headers,
-                           params=params, cookies=cookies)
-
+    proxy = "http://008ce922772df23014f036fe31f1c8bd6d2aa364:js_render=true@proxy.zenrows.com:8001"  # noqa
+    proxies = {"http": proxy, "https": proxy}
+    response = requests.get(url_pag, proxies=proxies, verify=False)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
@@ -143,7 +107,7 @@ def web_scraping_terabyte(placa, loja, sent_message_file, url_pag, price_sent_ms
 
         for i in range(len(dic_produtos['marca'])):
             marca = dic_produtos['marca'][i]
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria'):  # noqa
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe'):  # noqa
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]

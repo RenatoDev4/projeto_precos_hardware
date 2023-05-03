@@ -1,13 +1,8 @@
-import math
-import os
-import pickle
 import re
 import sqlite3
-from pathlib import Path
 from typing import Any, Dict, List
 
 import requests  # type: ignore
-import telebot
 from bs4 import BeautifulSoup
 
 # Inform that it is a navigator
@@ -30,9 +25,15 @@ dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
 produto = soup.find_all('div', class_=re.compile(
     'col-6 col-sm-6 col-md-4 col-lg-4 mb-4'))
 
+
 for produto in produto:
     # Get product name
-    marca = produto.find('h2', class_=re.compile('text')).get_text().strip()
+    marca = produto.find('div', class_=re.compile(
+        'product-card p-3 p-md-4 d-flex flex-column align-items-strech h-100 position-relative iconsmethods'))  # noqa
+    if marca is not None:
+        marca = marca.get('data-product-name')
+    else:
+        continue
 
     # Get product price (cash)
     preco_vista = produto.find('div', class_='billet')
@@ -65,6 +66,8 @@ for produto in produto:
     valor_preco_prazo_str = re.sub(
         r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
     valor_preco_prazo = float(valor_preco_prazo_str)
+
+    print(marca, preco, preco2)
 
     # Variable exclusive to 'message' to be sent to telegram
     preco_card_msg = preco2

@@ -139,7 +139,7 @@ footer {
   background-color: #cc7722;
   border-top: #ffffff 1px solid;
   color: #fff;
-  padding: 10px;
+  padding: 3px;
   margin-top: 12px;
   text-align: left;
   bottom: 0;
@@ -277,4 +277,30 @@ form button {
 
 .botao_busca {
   padding: 5px 10px;
+}
+
+/* Estilos paginator */
+
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination .page-link {
+  margin: 0 5px;
+  background-color: #cc7722;
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.pagination .page-link.active {
+  background-color: white;
+  color: #cc7722;
+}
+
+.pagination .page-link.disabled {
+  background-color: #ccc;
+  color: #999;
 }

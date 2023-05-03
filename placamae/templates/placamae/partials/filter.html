@@ -106,3 +106,29 @@
           {% endfor %}
       </tbody>
     </table>
+
+<div class="pagination">
+  {% if results.has_previous %}
+  <a href="?q?page={{ resultados.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&laquo;</a>
+  {% else %}
+  <span class="page-link disabled">&laquo;</span>
+  {% endif %}
+
+  {% for i in pags_visiveis %}
+  {% if i == '...' %}
+  <span class="page-link disabled">...</span>
+  {% else %}
+  {% if results.number == i %}
+  <span class="page-link active">{{ i }}</span>
+  {% else %}
+  <a href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link{% if resultados.number == i %} active{% endif %}">{{ i }}</a>
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+
+  {% if results.has_next %}
+  <a href="?page={{ resultados.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&raquo;</a>
+  {% else %}
+  <span class="page-link disabled">&raquo;</span>
+  {% endif %}
+</div>

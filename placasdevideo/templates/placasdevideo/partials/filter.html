@@ -91,3 +91,29 @@
       {% endfor %}
   </tbody>
 </table>
+
+<div class="pagination">
+  {% if resultados.has_previous %}
+    <a href="?page={{ resultados.previous_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&laquo;</a>
+  {% else %}
+    <span class="page-link disabled">&laquo;</span>
+  {% endif %}
+
+  {% for i in pags_visiveis %}
+    {% if i == '...' %}
+      <span class="page-link disabled">...</span>
+    {% else %}
+      {% if resultados.number == i %}
+        <span class="page-link active">{{ i }}</span>
+      {% else %}
+        <a href="?page={{ i }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">{{ i }}</a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if resultados.has_next %}
+    <a href="?page={{ resultados.next_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&raquo;</a>
+  {% else %}
+    <span class="page-link disabled">&raquo;</span>
+  {% endif %}
+</div>

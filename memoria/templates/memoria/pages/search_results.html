@@ -40,4 +40,30 @@
         </tbody>
     </table>
 
+<div class="pagination">
+{% if results.has_previous %}
+<a href="?q={{ query }}&page={{ resultados.previous_page_number }}" class="page-link">&laquo;</a>
+{% else %}
+<span class="page-link disabled">&laquo;</span>
+{% endif %}
+
+{% for i in pags_visiveis %}
+{% if i == '...' %}
+<span class="page-link disabled">...</span>
+{% else %}
+{% if results.number == i %}
+<span class="page-link active">{{ i }}</span>
+{% else %}
+<a href="?q={{ query }}&page={{ i }}" class="page-link{% if resultados.number == i %} active{% endif %}">{{ i }}</a>
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% if results.has_next %}
+<a href="?q={{ query }}&page={{ resultados.next_page_number }}" class="page-link">&raquo;</a>
+{% else %}
+<span class="page-link disabled">&raquo;</span>
+{% endif %}
+</div>
+
 {% include 'memoria/partials/footer.html' %}

@@ -1,0 +1,37 @@
+<body>
+  
+    <div class="box-formulario">        
+        
+        <div class="formulario">
+            
+            <h1 class="title-form">
+                <span class="subtitle-form">Dúvidas ou Sugestões? Mande sua mensagem!</span>
+            </h1>
+            <form action="{% url 'enviar_email' %}" method="post">
+                {% csrf_token %}
+                <span>
+                    <input type="text" class="input" id="nome" name="nome" placeholder="Nome" autocomplete="off" required=""/>
+                    <label for="nome"> <i class="icon icon-user-1"></i> </label>
+                </span>
+                <span>
+                    <input type="text" class="input" id="email" name="email" placeholder="E-mail" autocomplete="off" required=""/>
+                    <label for="email"> <i class="icon icon-mail-1"></i> </label>
+                </span>
+                <span>
+                    <input type="text" class="input" id="assunto" name="assunto" placeholder="Assunto" autocomplete="off" required=""/>
+                    <label for="assunto"> <i class="icon icon-info"></i> </label>
+                </span>
+                <span>
+                    <textarea type="text" class="textarea" id="mensagem" name="mensagem" rows="3" placeholder="Tem alguma dúvida? Como por exemplo: Quero pedir para adicionar uma loja no site!" autocomplete="off" required=""></textarea>
+                    <label for="mensagem"> <i class="icon icon-comment"></i> </label>
+                </span>
+                
+                <span>
+                    <input type="submit" value="Enviar" class="botao rotacao">
+                </span>
+            </form>
+        </div>
+    </div><!--Box Formulario--> 
+    
+  </body>
+</html>

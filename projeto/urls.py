@@ -24,5 +24,6 @@ urlpatterns = [
     path('processadores/', include('processadores.urls')),
     path('placamae/', include('placamae.urls')),
     path('memoria/', include('memoria.urls')),
+    path('duvidas/', include('duvidas.urls')),
 
 ]

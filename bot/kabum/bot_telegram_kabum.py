@@ -1,47 +1,23 @@
-import locale
-import os
-import pickle
 import re
 import sqlite3
-from pathlib import Path
 
 import requests  # type: ignore
 from bs4 import BeautifulSoup
 
-# Global Variables
-ROOT_DIR_MESSAGES = Path(__file__).resolve().parent.parent
-message = ''
-sent_messages = []
-sent_messages_file = ''
-
-# Locale configuration
-
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
 # Function Web Scraping Kabum.com.br
 
 
-def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_sent_msg, database):  # noqa
+def web_scraping_kabum(loja, url_base, url_pag, database):  # noqa
 
     # Database configuration
     DB_NAME = 'db.sqlite3'
     DB_FILE = DB_NAME
-
-    # Define Global Variables
-    global message
-    global sent_messages
-    global sent_messages_file
 
     # Inform that it is a navigator and save message
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
               AppleWebKit/537.36 (KHTML, like Gecko) \
                 Chrome/109.0.0.0 Safari/537.36"}
-    if os.path.exists(sent_message_file):
-        with open(sent_message_file, "rb") as f:
-            sent_messages = pickle.load(f)
-    else:
-        sent_messages = []
 
     # Begin web scraping
     site = requests.get(url_pag, headers=headers)
@@ -118,8 +94,8 @@ def web_scraping_kabum(placa, loja, sent_message_file, url_base, url_pag, price_
             if result is None:
                 # O produto não existe na tabela, então insere o produto com o preço atual # noqa
                 if preco != 0:
-                    cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-                        marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+                    cursor.execute(f"INSERT INTO {database} (marca, preco, url_marca, loja, valor_preco_prazo, preco_antigo) VALUES (?, ?, ?, ?, ?, ?)", (  # noqa
+                        marca, preco, url_marca, loja, valor_preco_prazo, 1))  # noqa
                     connection.commit()
             else:
                 # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa

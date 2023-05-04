@@ -4,5 +4,4 @@ from placasdevideo.views import placasdevideo
 
 urlpatterns = [
     path('', placasdevideo),
-
 ]

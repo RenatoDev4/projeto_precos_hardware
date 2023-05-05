@@ -81,7 +81,7 @@ def web_scraping_fgtec(loja, url_pag, database):  # noqa
 
         for i in range(len(dic_produtos['marca'])):
             marca = dic_produtos['marca'][i]
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe'):  # noqa
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('SSD') or marca.startswith('Fonte') or marca.startswith('CPU Cooler') or marca.startswith('Watercooler') or marca.startswith('Fan') or marca.startswith('Kit Fan'):  # noqa
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]

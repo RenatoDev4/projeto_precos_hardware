@@ -72,7 +72,7 @@ def web_scraping_inpower(loja, url_pag, database):
 
         for i in range(len(dic_produtos['marca'])):
             marca = dic_produtos['marca'][i]
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('Placa-Mãe') or marca.startswith('Placa-mãe'):  # noqa
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('Placa-Mãe') or marca.startswith('Placa-mãe') or marca.startswith('SSD') or marca.startswith('Fonte') or marca.startswith('Water Cooler') or marca.startswith('Cooler para processador') or marca.startswith('Kit com'):  # noqa
                 preco = dic_produtos['preco'][i]
                 url_marca = dic_produtos['url_marca'][i]
                 loja = dic_produtos['loja'][i]

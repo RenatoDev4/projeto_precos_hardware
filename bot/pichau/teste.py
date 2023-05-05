@@ -13,7 +13,7 @@ loja = 'Pichau'
 
 # Configurar o proxy
 
-proxy = "http://008ce922772df23014f036fe31f1c8bd6d2aa364:js_render=true@proxy.zenrows.com:8001"  # noqa
+proxy = "https://api.scrapingrobot.com/?token=0c5f29b0-cdfb-4281-b732-11d6c625e886&url={url_pag}"  # noqa
 proxies = {"http": proxy, "https": proxy}
 response = requests.get(url_pag, proxies=proxies, verify=False)
 soup = BeautifulSoup(response.content, 'html.parser')

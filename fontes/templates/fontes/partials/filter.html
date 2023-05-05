@@ -1,0 +1,108 @@
+{% load custom_filters %}
+
+<div class="filtros_formulario processadores">
+  <form method="get" action=".">
+    <div class="input-group">
+      <label for="select-modelo">
+        <h5>Selecione uma potência:</h5>
+      </label>
+      <select id="select-modelo" name="select-modelo" class="select-menu">
+          <option value="">Todas as fontes</option>
+          <option value="200W" {% if selecionados.modelo == '200W' %}selected{% endif %}>Fontes 200W</option>
+          <option value="230W" {% if selecionados.modelo == '230W' %}selected{% endif %}>Fontes 230W</option>
+          <option value="300W" {% if selecionados.modelo == '300W' %}selected{% endif %}>Fontes 300W</option>
+          <option value="350W" {% if selecionados.modelo == '350W' %}selected{% endif %}>Fontes 350W</option>
+          <option value="400W" {% if selecionados.modelo == '400W' %}selected{% endif %}>Fontes 400W</option>
+          <option value="450W" {% if selecionados.modelo == '450W' %}selected{% endif %}>Fontes 450W</option>
+          <option value="500W" {% if selecionados.modelo == '500W' %}selected{% endif %}>Fontes 500W</option>
+          <option value="550W" {% if selecionados.modelo == '550W' %}selected{% endif %}>Fontes 550W</option>
+          <option value="600W" {% if selecionados.modelo == '600W' %}selected{% endif %}>Fontes 600W</option>
+          <option value="650W" {% if selecionados.modelo == '650W' %}selected{% endif %}>Fontes 650W</option>
+          <option value="700W" {% if selecionados.modelo == '700W' %}selected{% endif %}>Fontes 700W</option>
+          <option value="750W" {% if selecionados.modelo == '750W' %}selected{% endif %}>Fontes 750W</option>
+          <option value="800W" {% if selecionados.modelo == '800W' %}selected{% endif %}>Fontes 800W</option>
+          <option value="850W" {% if selecionados.modelo == '850W' %}selected{% endif %}>Fontes 850W</option>
+          <option value="1000W" {% if selecionados.modelo == '1000W' %}selected{% endif %}>Fontes 1000W</option>
+          <option value="1050W" {% if selecionados.modelo == '1050W' %}selected{% endif %}>Fontes 1050W</option>
+          <option value="1200W" {% if selecionados.modelo == '1200W' %}selected{% endif %}>Fontes 1200W</option>
+          <option value="1300W" {% if selecionados.modelo == '1300W' %}selected{% endif %}>Fontes 1300W</option>
+          <option value="1600W" {% if selecionados.modelo == '1600W' %}selected{% endif %}>Fontes 1600W</option> 
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="select-loja">
+        <h5>Selecione uma loja:</h5>
+      </label>
+      <select id="select-loja" name="select-loja" class="select-menu">
+        <option value="">Todas as lojas</option>
+        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
+        <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
+        <option value="Terabyte" {% if selecionados.loja == 'Terabyte' %}selected{% endif %}>Terabyte</option>
+        <option value="AlligatorShop" {% if selecionados.loja == 'AlligatorShop' %}selected{% endif %}>AlligatorShop</option>
+        <option value="FGTEC" {% if selecionados.loja == 'FGTEC' %}selected{% endif %}>FGTEC</option>
+        <option value="GabiGames" {% if selecionados.loja == 'GabiGames' %}selected{% endif %}>GabiGames</option>
+        <option value="GKInfoStore" {% if selecionados.loja == 'GKInfoStore' %}selected{% endif %}>GKInfoStore</option>
+        <option value="Guerra Digital" {% if selecionados.loja == 'Guerra Digital' %}selected{% endif %}>Guerra Digital</option>
+        <option value="INPOWER" {% if selecionados.loja == 'INPOWER' %}selected{% endif %}>INPOWER</option>
+        <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
+        <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
+      </select>
+  </div>
+
+  <br>
+  <button type='submit'>Filtrar</button>
+</form>
+</div>
+    
+    <div id="tabela-de-dados"></div>
+    <table>
+      <thead>
+          <tr>
+              <th>Marca</th>
+              <th>Loja</th>
+              <th>Preço</th>
+              <th>Valor do preço a prazo</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for resultado in resultados %}
+          <tr>
+              <td><a href="{{ resultado.url_marca }}" target="_blank">{{ resultado.marca }}</a></td>
+              <td>{{ resultado.loja }}</td>
+              <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+              <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="4">Nenhum modelo foi encontrado no banco de dados. &#128557;</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+<div class="pagination">
+  {% if resultados.has_previous %}
+    <a href="?page={{ resultados.previous_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&laquo;</a>
+  {% else %}
+    <span class="page-link disabled">&laquo;</span>
+  {% endif %}
+
+  {% for i in pags_visiveis %}
+    {% if i == '...' %}
+      <span class="page-link disabled">...</span>
+    {% else %}
+      {% if resultados.number == i %}
+        <span class="page-link active">{{ i }}</span>
+      {% else %}
+        <a href="?page={{ i }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">{{ i }}</a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if resultados.has_next %}
+    <a href="?page={{ resultados.next_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&raquo;</a>
+  {% else %}
+    <span class="page-link disabled">&raquo;</span>
+  {% endif %}
+</div>

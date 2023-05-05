@@ -1,0 +1,96 @@
+{% load custom_filters %}
+
+<div class="filtros_formulario processadores">
+  <form method="get" action=".">
+    <div class="input-group">
+      <label for="select-modelo">
+        <h5>Selecione um tamanho:</h5>
+      </label>
+      <select id="select-modelo" name="select-modelo" class="select-menu">
+          <option value="">Todos os discos rigidos</option>
+          <option value="120 GB,128 GB,120GB,128GB" {% if selecionados.modelo == '120 GB,128 GB,120GB,128GB' %}selected{% endif %}>120 - 128 GB</option>
+          <option value="240 GB,256 GB,240GB,256GB" {% if selecionados.modelo == '240 GB,256 GB,240GB,256GB' %}selected{% endif %}>240 - 256 GB</option>
+          <option value="480 GB,500 GB,512 GB,480GB,500GB,512GB" {% if selecionados.modelo == '480 GB,500 GB,512 GB,480GB,500GB,512GB' %}selected{% endif %}>480 - 512 GB</option>
+          <option value="960 GB,1 TB,960GB,1TB" {% if selecionados.modelo == '960 GB,1 TB,960GB,1TB' %}selected{% endif %}>960 GB - 1 TB</option>
+          <option value="1.9 TB,2 TB,1.9TB,2TB" {% if selecionados.modelo == '1.9 TB,2 TB,1.9TB,2TB' %}selected{% endif %}>1.9 TB - 2 TB</option>
+          <option value="3840 GB,3840GB,3840TB" {% if selecionados.modelo == '3840 GB,3840GB,3840TB' %}selected{% endif %}>3 TB</option>
+          <option value="4 TB,4000 GB,4TB, 4000GB" {% if selecionados.modelo == '4 TB,4000 GB,4TB, 4000GB' %}selected{% endif %}>4 TB</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="select-loja">
+        <h5>Selecione uma loja:</h5>
+      </label>
+      <select id="select-loja" name="select-loja" class="select-menu">
+        <option value="">Todas as lojas</option>
+        <option value="Kabum" {% if selecionados.loja == 'Kabum' %}selected{% endif %}>Kabum</option>
+        <option value="Pichau" {% if selecionados.loja == 'Pichau' %}selected{% endif %}>Pichau</option>
+        <option value="Terabyte" {% if selecionados.loja == 'Terabyte' %}selected{% endif %}>Terabyte</option>
+        <option value="AlligatorShop" {% if selecionados.loja == 'AlligatorShop' %}selected{% endif %}>AlligatorShop</option>
+        <option value="FGTEC" {% if selecionados.loja == 'FGTEC' %}selected{% endif %}>FGTEC</option>
+        <option value="GabiGames" {% if selecionados.loja == 'GabiGames' %}selected{% endif %}>GabiGames</option>
+        <option value="GKInfoStore" {% if selecionados.loja == 'GKInfoStore' %}selected{% endif %}>GKInfoStore</option>
+        <option value="Guerra Digital" {% if selecionados.loja == 'Guerra Digital' %}selected{% endif %}>Guerra Digital</option>
+        <option value="INPOWER" {% if selecionados.loja == 'INPOWER' %}selected{% endif %}>INPOWER</option>
+        <option value="ITXGamer" {% if selecionados.loja == 'ITXGamer' %}selected{% endif %}>ITXGamer</option>
+        <option value="PatoLoco" {% if selecionados.loja == 'PatoLoco' %}selected{% endif %}>PatoLoco</option>
+      </select>
+  </div>
+
+  <br>
+  <button type='submit'>Filtrar</button>
+</form>
+</div>
+    
+    <div id="tabela-de-dados"></div>
+    <table>
+      <thead>
+          <tr>
+              <th>Marca</th>
+              <th>Loja</th>
+              <th>Preço</th>
+              <th>Valor do preço a prazo</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for resultado in resultados %}
+          <tr>
+              <td><a href="{{ resultado.url_marca }}" target="_blank">{{ resultado.marca }}</a></td>
+              <td>{{ resultado.loja }}</td>
+              <td>R${{ resultado.preco|floatformat:2|format_price }}</td>
+              <td>R${{ resultado.valor_preco_prazo|floatformat:2|format_price }}</td>        
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="4">Nenhum modelo foi encontrado no banco de dados. &#128557;</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+<div class="pagination">
+  {% if resultados.has_previous %}
+    <a href="?page={{ resultados.previous_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&laquo;</a>
+  {% else %}
+    <span class="page-link disabled">&laquo;</span>
+  {% endif %}
+
+  {% for i in pags_visiveis %}
+    {% if i == '...' %}
+      <span class="page-link disabled">...</span>
+    {% else %}
+      {% if resultados.number == i %}
+        <span class="page-link active">{{ i }}</span>
+      {% else %}
+        <a href="?page={{ i }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">{{ i }}</a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if resultados.has_next %}
+    <a href="?page={{ resultados.next_page_number }}{% if selecionados.modelo %}&select-modelo={{ selecionados.modelo }}{% endif %}{% if selecionados.loja %}&select-loja={{ selecionados.loja }}{% endif %}" class="page-link">&raquo;</a>
+  {% else %}
+    <span class="page-link disabled">&raquo;</span>
+  {% endif %}
+</div>

@@ -83,7 +83,7 @@ def web_scraping_alligatorshop(loja, url_pag, database):  # noqa
             url_marca = dic_produtos['url_marca'][i]
             loja = dic_produtos['loja'][i]
             valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('Placa Mae'):  # noqa
+            if marca.startswith('Placa de Vídeo') or marca.startswith('Processador') or marca.startswith('Memória') or marca.startswith('Memoria') or marca.startswith('Placa Mãe') or marca.startswith('Placa Mae') or marca.startswith('SSD') or marca.startswith('Fonte') or marca.startswith('Cooler') or marca.startswith('Water Cooler'):  # noqa
                 cursor.execute(
                     f"SELECT * FROM {database} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
                 result = cursor.fetchone()

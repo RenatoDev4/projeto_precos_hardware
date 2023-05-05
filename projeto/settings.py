@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'memoria',
     'home',
     'duvidas',
+    'ssd',
+    'fontes',
+    'coolers',
 ]
 
 MIDDLEWARE = [

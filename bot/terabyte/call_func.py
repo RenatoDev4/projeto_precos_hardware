@@ -25,25 +25,25 @@ URL_COOLERS = 'https://www.terabyteshop.com.br/refrigeracao'
 
 # ------------- VGA -----------------#
 
-# web_scraping_terabyte(SHOPNAME, URL_VGA, DATABASE_NAME_VGA)  # noqa
+web_scraping_terabyte(SHOPNAME, URL_VGA, DATABASE_NAME_VGA)  # noqa
 
 
 # ------------- Processadores -----------------#
 
-# web_scraping_terabyte(SHOPNAME, URL_PROCESSOR, DATABASE_NAME_PROCESSADOR)  # noqa
+web_scraping_terabyte(SHOPNAME, URL_PROCESSOR, DATABASE_NAME_PROCESSADOR)  # noqa
 
 
 # ------------- Memorias DDR4 - DDR5 -----------------#
 
-# web_scraping_terabyte(SHOPNAME, URL_MEMORY, DATABASE_NAME_MEMORY)  # noqa
+web_scraping_terabyte(SHOPNAME, URL_MEMORY, DATABASE_NAME_MEMORY)  # noqa
 
 # ------------- Placa Mãe -----------------#
 
-# web_scraping_terabyte(SHOPNAME, URL_MOTHERBOARD, DATABASE_NAME_MOTHERBOARD)  # noqa
+web_scraping_terabyte(SHOPNAME, URL_MOTHERBOARD, DATABASE_NAME_MOTHERBOARD)  # noqa
 
 # ------------- SSD -----------------#
 
-# web_scraping_terabyte(SHOPNAME, URL_SSD, DATABASE_NAME_SSD)  # noqa
+web_scraping_terabyte(SHOPNAME, URL_SSD, DATABASE_NAME_SSD)  # noqa
 
 # ------------- Power Supply -----------------#
 

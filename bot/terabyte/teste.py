@@ -2,53 +2,76 @@ import locale
 import re
 import sys
 import time
+from typing import Any, Dict, List
 
 import cloudscraper
 import requests
 from bs4 import BeautifulSoup
 from twocaptcha import TwoCaptcha
 
-# Begin web scraping annd inform that it is a navigator
-headers = {
-    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
-            AppleWebKit/537.36 (KHTML, like Gecko) \
-            Chrome/109.0.0.0 Safari/537.36"}
-# Locale configuration
-
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
-# Sua chave de API 2captcha
-API_KEY = '3321608b9bb8343b2d991f76d1ac91fa'
-
-# URL que você deseja solicitar
-url = 'https://www.terabyteshop.com.br/busca?str=RX+6400'
+loja = 'Terabyte'
+url_pag = 'https://www.terabyteshop.com.br/hardware/hard-disk'
 
 # Cria um objeto cloudscraper com a Session
 scraper = cloudscraper.create_scraper()
 
 # Obtém o site com o Cloudscraper
-response = scraper.get(url)
-
-# Verifica se há um desafio de captcha do Cloudflare
-if 'cf-ray' in response.headers:
-    # Extrai o token do captcha do Cloudflare
-    soup = BeautifulSoup(response.content, 'html.parser')
-    captcha_token = soup.find('input', {'name': 'r'})['value']
-
-    # Envia a solicitação para resolver o captcha do Cloudflare
-    solver = TwoCaptcha(API_KEY)
-    captcha_response = solver.recaptcha_v2(
-        sitekey='6Lc3V3QUAAAAABz0IZGZ0X_-vIsucEymLJ0Zf8VY', url=url)
-
-    # Envia a solicitação com o token do captcha resolvido
-    params = {'r': captcha_token,
-              'g-recaptcha-response': captcha_response['code']}
-    response = scraper.post(url, params=params)
-
-# Extrai o conteúdo da página
+response = scraper.get(url_pag)
 soup = BeautifulSoup(response.content, 'html.parser')
 
-print(soup)
+dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
+], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
+
+produto = soup.find_all(
+    'div', class_='pbox col-xs-12 col-sm-6 col-md-3 col-lg-1-5')
+
+for produto in produto:
+    # Get product names
+    marca = produto.find('a', class_='prod-name').get('title')
+
+    # Get product price (cash)
+    preco = produto.find('div', class_='prod-new-price')
+    if preco is not None:
+        preco = preco.get_text().strip()
+    else:
+        preco = '0.0'
+
+    valor_preco_avista_str = re.sub(
+        r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
+    valor_preco_avista = float(valor_preco_avista_str)
+
+    # Get product price (credit card)
+    preco2 = produto.find('div', class_='prod-juros')
+
+    if preco2 is not None:
+        spans = preco2.find_all('span')
+        if len(spans) >= 2:
+            qtd_parcelas = spans[0].get_text().strip()
+            valor_parcela = spans[1].get_text().strip()
+
+            qtd_parcelas = int(re.sub(r'[^\d]', '', qtd_parcelas))
+            valor_parcela_str = re.sub(
+                r'[^\d,]', '', valor_parcela).replace(',', '.')
+            valor_parcela = float(valor_parcela_str)
+
+            valor_total = round(qtd_parcelas * valor_parcela, 2)
+        else:
+            valor_total = 0.0
+    else:
+        valor_total = 0.0
+
+    # Get URL's of products
+
+    url_marca = produto.find('a', class_='prod-name').get('href')
+
+    # Add data to dictionary
+    dic_produtos['marca'].append(marca)
+    dic_produtos['preco'].append(valor_preco_avista)
+    dic_produtos['url_marca'].append(url_marca)
+    dic_produtos['loja'].append(loja)
+    dic_produtos['valor_preco_prazo'].append(valor_total)
+
+    print(marca, valor_preco_avista, valor_total)
 
 # produto = soup.find_all(
 #     'div', class_='pbox col-xs-12 col-sm-6 col-md-3 col-lg-1-5')

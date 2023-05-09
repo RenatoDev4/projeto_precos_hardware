@@ -1,4 +1,4 @@
-from bot_telegram_pichau import web_scraping_pichau
+from bot_telegram_pichau_com_cloudscraper import web_scraping_pichau
 
 # ------------- SHOP NAME -----------------#
 
@@ -64,18 +64,18 @@ URL_FAN = 'https://www.pichau.com.br/hardware/ventoinhas-e-casemod?page='
 
 # ------------- Power Supply -----------------#
 
-web_scraping_pichau(SHOPNAME, URL_POWER_SUPPLY + '1', DATABASE_NAME_POWER_SUPPLY)  # noqa
-web_scraping_pichau(SHOPNAME, URL_POWER_SUPPLY + '2', DATABASE_NAME_POWER_SUPPLY)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_POWER_SUPPLY + '1', DATABASE_NAME_POWER_SUPPLY)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_POWER_SUPPLY + '2', DATABASE_NAME_POWER_SUPPLY)  # noqa
 
-# ------------- Power Supply -----------------#
+# ------------- Coolers e Fans -----------------#
 
 web_scraping_pichau(SHOPNAME, URL_COOLERS + '1', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_COOLERS + '2', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_COOLERS + '3', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_COOLERS + '4', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_COOLERS + '5', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_COOLERS + '2', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_COOLERS + '3', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_COOLERS + '4', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_COOLERS + '5', DATABASE_NAME_COOLERS)  # noqa
 
-web_scraping_pichau(SHOPNAME, URL_FAN + '1', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_FAN + '2', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_FAN + '3', DATABASE_NAME_COOLERS)  # noqa
-web_scraping_pichau(SHOPNAME, URL_FAN + '4', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_FAN + '1', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_FAN + '2', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_FAN + '3', DATABASE_NAME_COOLERS)  # noqa
+# web_scraping_pichau(SHOPNAME, URL_FAN + '4', DATABASE_NAME_COOLERS)  # noqa

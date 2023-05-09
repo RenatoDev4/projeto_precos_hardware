@@ -5,10 +5,13 @@ class SearchCOOLERS(models.Model):
     marca = models.CharField(max_length=100)
     url_marca = models.CharField(max_length=100)
     loja = models.CharField(max_length=100)
-    preco = models.DecimalField(max_digits=7, decimal_places=2)
-    valor_preco_prazo = models.DecimalField(max_digits=7, decimal_places=2)
+    preco = models.DecimalField(max_digits=7, decimal_places=2, null=True)
+    valor_preco_prazo = models.DecimalField(
+        max_digits=7, decimal_places=2, null=True)
     preco_antigo = models.DecimalField(
-        max_digits=7, decimal_places=2, default=1)  # type: ignore
+        max_digits=7, decimal_places=2, null=True)
+    ativo = models.DecimalField(
+        max_digits=7, decimal_places=2, default=0, null=True)
 
     def __str__(self):
         return self.marca + " "

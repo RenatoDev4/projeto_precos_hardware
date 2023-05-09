@@ -2,6 +2,7 @@ import re
 import sqlite3
 from typing import Any, Dict, List
 
+import cloudscraper
 import requests  # type: ignore
 from bs4 import BeautifulSoup
 
@@ -14,11 +15,11 @@ def web_scraping_terabyte(loja, url_pag, database):  # noqa
     DB_NAME = 'db.sqlite3'
     DB_FILE = DB_NAME
 
-    # Configurar o proxy
+    # Cria um objeto cloudscraper com a Session
+    scraper = cloudscraper.create_scraper()
 
-    proxy = "http://008ce922772df23014f036fe31f1c8bd6d2aa364:js_render=true@proxy.zenrows.com:8001"  # noqa
-    proxies = {"http": proxy, "https": proxy}
-    response = requests.get(url_pag, proxies=proxies, verify=False)
+    # Obtém o site com o Cloudscraper
+    response = scraper.get(url_pag)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
@@ -44,16 +45,23 @@ def web_scraping_terabyte(loja, url_pag, database):  # noqa
 
         # Get product price (credit card)
         preco2 = produto.find('div', class_='prod-juros')
+
         if preco2 is not None:
-            preco2 = preco2.get_text().strip()
+            spans = preco2.find_all('span')
+            if len(spans) >= 2:
+                qtd_parcelas = spans[0].get_text().strip()
+                valor_parcela = spans[1].get_text().strip()
+
+                qtd_parcelas = int(re.sub(r'[^\d]', '', qtd_parcelas))
+                valor_parcela_str = re.sub(
+                    r'[^\d,]', '', valor_parcela).replace(',', '.')
+                valor_parcela = float(valor_parcela_str)
+
+                valor_total = round(qtd_parcelas * valor_parcela, 2)
+            else:
+                valor_total = 0.0
         else:
-            preco2 = '0.0'
-        preco2 = preco2.replace('12x de R$ ', '').replace(
-            ' sem juros', '').strip()
-        valor_preco_prazo_str = re.sub(
-            r'[^\d,]', '', preco2).replace(',', '.')   # type: ignore
-        valor_preco_prazo = float(valor_preco_prazo_str) * 12
-        valor_preco_prazo = round(valor_preco_prazo, 2)
+            valor_total = 0.0
 
         # Get URL's of products
 
@@ -64,7 +72,7 @@ def web_scraping_terabyte(loja, url_pag, database):  # noqa
         dic_produtos['preco'].append(valor_preco_avista)
         dic_produtos['url_marca'].append(url_marca)
         dic_produtos['loja'].append(loja)
-        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
+        dic_produtos['valor_preco_prazo'].append(valor_total)
 
         # forwarding the data to the database
 

@@ -1,57 +1,105 @@
 /* Estilos do menu superior */
 
-*{
+* {
   margin: 0;
   padding: 0;
-  
+  box-sizing: border-box;
 }
-nav{
+
+nav {
   position: relative;
   background-color: #cc7722;
   align-items: center;
   border-bottom: 1px solid white;
   margin-bottom: 20px;
-  
+}
 
+nav ul {
+  display: flex;
+  list-style: none;
+  justify-content: center;
+  align-items: center;
+}
+
+nav li {
+  position: relative;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  padding: 12px 20px;
+  display: block;
+  text-transform: uppercase;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+nav a:hover, nav a.selected {
+  background-color: #a85d15;
+  color: #fff;
 }
 
 #contact_menu_right {
   position: absolute;
   top: 0;
   right: 0;
-  
-}
-
-#contact_menu_right li {
-  display: inline-block;
-  margin-left: 10px;
-  
+  background-color: #cc7722;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 #contact_menu_right a {
   display: block;
-  padding: 10px;
-  color: #484d50;
-  
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-nav a{
-  color: white;
-  text-decoration: none;
-  font-family: 'Roboto', sans-serif;
-  font-size: 15px;
-  padding: 12px;
-  padding-left: 40px;
-  display: block;
-  text-transform: uppercase;
-  
+#contact_menu_right a:hover {
+  background-color: #a85d15;
+  color: #fff;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
-nav ul{
-  display: flex;
-  list-style: none;
+
+nav li::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out 0s;
 }
-nav a:hover{
-  background: rgba(255, 250, 250, 0.3);
+
+nav li:hover::before {
+  visibility: visible;
+  transform: scaleX(1);
+}
+
+nav li::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out 0s;
+}
+
+nav li:hover::before {
+  visibility: visible;
+  transform: scaleX(1);
 }
 
 /* Estilos da tabela */
@@ -146,7 +194,7 @@ tbody tr:nth-child(odd) {
   background: #484d50;
 }
 tbody tr:nth-child(even) {
-  background: #808080;
+  background: #7c7c7c;
 }
 
 tbody tr {
@@ -156,7 +204,10 @@ tbody tr:hover {
   background: #cc7722;
 }
 
-/* Estilos pagina do rodapé */
+/* Importando uma nova fonte */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Estilos do rodapé */
 
 footer {
   display: flex;
@@ -168,8 +219,14 @@ footer {
   margin-top: 12px;
   bottom: 0;
   width: 100%;
-  font-family: 'Roboto', sans-serif;
-  position: fixed;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+footer:hover {
+  background-color: #e0883a;
 }
 
 .right-content {
@@ -177,9 +234,15 @@ footer {
 }
 
 footer a {
-    color: black;
-    text-decoration: none;
-    border-bottom: 1px solid black;
+  color: black;
+  text-decoration: none;
+  border-bottom: 1px solid black;
+  transition: color 0.3s, border-bottom 0.3s;
+}
+
+footer a:hover {
+  color: #cc7722;
+  border-bottom: 1px solid #cc7722;
 }
 
 /* Estilos do formulário */
@@ -226,28 +289,83 @@ form button {
 
 /* Estilos dos filtros */
 
+:root {
+  --cor-principal: #cc7722;
+  --cor-secundaria: #333333;
+  --cor-terciaria: #000000;
+}
+
+.filtros_formulario {
+background-color: var(--cor-secundaria);
+border-radius: 10px;
+padding: 20px;
+margin-bottom: 20px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .input-group {
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 20px;
-  
+display: inline-block;
+vertical-align: top;
+margin-right: 20px;
+}
+
+.input-group h5 {
+margin-bottom: 5px;
+font-size: 16px;
+font-weight: 600;
+color: var(--cor-principal);
 }
 
 .select-menu {
-  display: inline-block;
-  width: 200px;
-  height: 30px;
-  vertical-align: top;
-  
+display: inline-block;
+width: 200px;
+height: 34px;
+vertical-align: top;
+background-color: var(--cor-terciaria);
+border: 1px solid var(--cor-principal);
+border-radius: 4px;
+padding: 0 10px;
+font-size: 14px;
+color: #ffffff;
+}
+
+.select-menu:hover {
+border-color: var(--cor-principal);
+box-shadow: 0 0 5px rgba(204, 119, 34, 0.5);
+}
+
+button {
+background-color: var(--cor-principal);
+border: none;
+border-radius: 4px;
+color: #ffffff;
+padding: 8px 16px;
+font-size: 14px;
+cursor: pointer;
+transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+background-color: #a45b19;
+box-shadow: 0 0 5px rgba(204, 119, 34, 0.5);
+}
+
+button:focus {
+outline: none;
 }
 
 
-/* Estilos pagina de busca */
+/* Estilos da página de busca */
 
 .formulario_busca {
   float: right;
   display: flex;
   align-items: center;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  margin-top: 6px;
+
 }
 
 .formulario_busca_inside {
@@ -256,13 +374,55 @@ form button {
   align-items: center;
 }
 
-
-.search-field input[type="text"] {
+.input-group {
   margin-right: 10px;
 }
 
+.input-group h5 {
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cor-principal);
+}
+
+.formulario_busca input[type="text"] {
+  height: 34px;
+  background-color: var(--cor-terciaria);
+  border: 1px solid var(--cor-principal);
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+input[type="text"]:hover {
+  border-color: var(--cor-principal);
+  box-shadow: 0 0 5px rgba(204, 119, 34, 0.5);
+}
+
+input[type="text"]:focus {
+  outline: none;
+}
+
 .botao_busca {
-  padding: 5px 10px;
+  background-color: var(--cor-principal);
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-left: 10px;
+}
+
+.botao_busca:hover {
+  background-color: #a45b19;
+  box-shadow: 0 0 5px rgba(204, 119, 34, 0.5);
+}
+
+.botao_busca:focus {
+  outline: none;
 }
 
 /* Estilos paginator */

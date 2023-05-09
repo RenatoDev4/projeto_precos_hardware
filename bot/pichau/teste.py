@@ -1,25 +1,36 @@
+import locale
+import re
 import sqlite3
 from typing import Any, Dict, List
 
+import cloudscraper
 import requests
 from bs4 import BeautifulSoup
+from twocaptcha import TwoCaptcha
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 # Database configuration
 DB_NAME = 'db.sqlite3'
 DB_FILE = DB_NAME
 
-url_pag = 'https://www.pichau.com.br/hardware/placa-de-video?rgpu=6630'
 loja = 'Pichau'
 
-# Configurar o proxy
+# Sua chave de API 2captcha
+API_KEY = '3321608b9bb8343b2d991f76d1ac91fa'
 
-proxy = "https://api.scrapingrobot.com/?token=0c5f29b0-cdfb-4281-b732-11d6c625e886&url={url_pag}"  # noqa
-proxies = {"http": proxy, "https": proxy}
-response = requests.get(url_pag, proxies=proxies, verify=False)
+# URL que você deseja solicitar
+url = 'https://www.pichau.com.br/hardware/ssd'
+
+# Cria um objeto cloudscraper com a Session
+scraper = cloudscraper.create_scraper()
+
+# Obtém o site com o Cloudscraper
+response = scraper.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 
 
-dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [
+dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa
 ], 'url_marca': [], 'loja': [], 'valor_preco_prazo': []}
 
 produto = soup.find_all(
@@ -48,78 +59,29 @@ for produto in produto:
     # Get product price (cash)
     preco = produto.find('div', class_='jss79')
     if preco is not None:
-        preco = preco.get_text().strip().replace('R$', '')  # remove 'R$' symbol # noqa
+        preco = preco.get_text().strip().replace('R$', '')
+
     else:
-        preco = '0.0'
-    # remove all dots from the string
-    preco_sem_pontos = preco.replace('.', '')
-    valor_preco_avista_str = preco_sem_pontos.replace(
-        ',', '.')  # replace comma with dot
-    # divide by 100 to convert to float
-    valor_preco_avista = float(valor_preco_avista_str)
+        preco = 0.0
 
     # Get product price (credit card)
     preco2 = produto.find('div', class_='jss87')
     if preco2 is not None:
-        preco2 = preco2.get_text().strip().replace('R$', '')  # remove 'R$' symbol # noqa
+        preco2 = preco2.get_text().strip().replace('R$', '')
     else:
-        preco2 = '0.0'
-    # remove all dots from the string
-    preco2_sem_pontos = preco2.replace('.', '')
-    valor_preco_prazo_str = preco2_sem_pontos.replace(
-        ',', '.')  # replace comma with dot
-    # divide by 100 to convert to float
-    valor_preco_prazo = float(valor_preco_prazo_str)
+        preco2 = 0.0
 
     url = produto.find('a')['href']
     url_marca = 'https://www.pichau.com.br' + url
 
-    # Add data to dictionary
-    dic_produtos['marca'].append(marca)
+    # # Add data to dictionary
+    # dic_produtos['marca'].append(marca)
+    # dic_produtos['preco'].append(valor_preco_avista_str)
+    # dic_produtos['valor_preco_prazo'].append(valor_preco_prazo_str)
+    # dic_produtos['url_marca'].append(url_marca)
+    # dic_produtos['loja'].append(loja)
 
-    try:
-        preco_float = float(preco)
-    except ValueError:
-        preco_float = valor_preco_avista
-    if preco_float <= 1000:
-        dic_produtos['preco'].append(preco)
-    else:
-        dic_produtos['preco'].append(valor_preco_avista)
-
-    try:
-        preco_float2 = float(preco2)
-    except ValueError:
-        preco_float2 = valor_preco_prazo
-    if preco_float2 <= 1000:
-        dic_produtos['valor_preco_prazo'].append(preco_float2)
-    else:
-        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
-
-    url = produto.find('a')['href']
-    url_marca = 'https://www.pichau.com.br' + url
-
-    # Add data to dictionary
-    dic_produtos['marca'].append(marca)
-    try:
-        preco_float = float(preco)
-    except ValueError:
-        preco_float = valor_preco_avista
-    if preco_float <= 1000:
-        dic_produtos['preco'].append(preco_float)
-    else:
-        dic_produtos['preco'].append(valor_preco_avista)
-    dic_produtos['url_marca'].append(url_marca)
-    dic_produtos['loja'].append(loja)
-    try:
-        preco_float2 = float(preco2)
-    except ValueError:
-        preco_float2 = valor_preco_prazo
-    if preco_float2 <= 1000:
-        dic_produtos['valor_preco_prazo'].append(preco_float2)
-    else:
-        dic_produtos['valor_preco_prazo'].append(valor_preco_prazo)
-
-    print(marca, preco_float, preco_float2)
+    print(marca, preco, preco2)
 
     # forwarding the data to the database
 

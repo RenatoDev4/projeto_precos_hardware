@@ -60,7 +60,10 @@ for produto in produto:
     preco = produto.find('div', class_='jss79')
     if preco is not None:
         preco = preco.get_text().strip().replace('R$', '')
-
+        # remova todos os espaços em branco
+        preco = re.sub(r'[^\d,]', '', preco)
+        preco = re.sub(r',', '.', preco)
+        preco = round(float(preco), 2)
     else:
         preco = 0.0
 
@@ -68,48 +71,62 @@ for produto in produto:
     preco2 = produto.find('div', class_='jss87')
     if preco2 is not None:
         preco2 = preco2.get_text().strip().replace('R$', '')
+        # remova todos os espaços em branco
+        preco2 = re.sub(r'[^\d,]', '', preco2)
+        preco2 = re.sub(r',', '.', preco2)
+
     else:
         preco2 = 0.0
 
     url = produto.find('a')['href']
     url_marca = 'https://www.pichau.com.br' + url
 
-    # # Add data to dictionary
-    # dic_produtos['marca'].append(marca)
-    # dic_produtos['preco'].append(valor_preco_avista_str)
-    # dic_produtos['valor_preco_prazo'].append(valor_preco_prazo_str)
-    # dic_produtos['url_marca'].append(url_marca)
-    # dic_produtos['loja'].append(loja)
+    # Add data to dictionary
+    dic_produtos['marca'].append(marca)
+    dic_produtos['preco'].append(preco)
+    dic_produtos['valor_preco_prazo'].append(preco2)
+    dic_produtos['url_marca'].append(url_marca)
+    dic_produtos['loja'].append(loja)
 
-    print(marca, preco, preco2)
+    def remover_marcas_nao_listadas(database, cursor, marcas_listadas):
+        cursor.execute(f"SELECT DISTINCT marca FROM {database}")
+        marcas_no_db = [row[0] for row in cursor.fetchall()]
+
+        for marca in marcas_no_db:
+            if marca not in marcas_listadas:
+                cursor.execute(
+                    f"DELETE FROM {database} WHERE marca = ?", (marca,))
+                connection.commit()
 
     # forwarding the data to the database
+    connection = sqlite3.connect(DB_FILE)
+    cursor = connection.cursor()
 
-    # connection = sqlite3.connect(DB_FILE)
-    # cursor = connection.cursor()
+    for i in range(len(dic_produtos['marca'])):
+        marca = dic_produtos['marca'][i]
+        preco = dic_produtos['preco'][i]
+        url_marca = dic_produtos['url_marca'][i]
+        loja = dic_produtos['loja'][i]
+        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
 
-    # for i in range(len(dic_produtos['marca'])):
-    #     marca = dic_produtos['marca'][i]
-    #     preco = dic_produtos['preco'][i]
-    #     url_marca = dic_produtos['url_marca'][i]
-    #     loja = dic_produtos['loja'][i]
-    #     valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]  # noqa
+        cursor.execute(
+            f"SELECT * FROM {DB_NAME} WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
+        result = cursor.fetchone()
 
-    #     cursor.execute(
-    #         "SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND loja = ?", (marca, loja))  # noqa
-    #     result = cursor.fetchone()
+        if result is None:
+            # O produto não existe na tabela, então insere o produto com o preço atual # noqa
+            if preco != 0:
+                cursor.execute(f"INSERT INTO {DB_NAME} (marca, preco, url_marca, loja, valor_preco_prazo, preco_antigo) VALUES (?, ?, ?, ?, ?, ?)", (  # noqa
+                    marca, preco, url_marca, loja, valor_preco_prazo, 1))  # noqa
+                connection.commit()
+        else:
+            # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
+            if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
+                cursor.execute(f"UPDATE {DB_NAME} SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
+                    preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
+                connection.commit()
 
-    #     if result is None:
-    #         # O produto não existe na tabela, então insere o produto com o preço atual # noqa
-    #         if preco != 0:
-    #             cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)", (  # noqa
-    #                 marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-    #             connection.commit()
-    #     else:
-    #         # O produto já existe na tabela, então atualiza os campos se houver mudanças # noqa
-    #         if preco != result[1] or url_marca != result[3] or valor_preco_prazo != result[4]:  # noqa
-    #             cursor.execute("UPDATE placasdevideo_searchvga SET preco = ?, url_marca = ?, valor_preco_prazo = ? WHERE marca = ? AND loja = ?", (  # noqa
-    #                 preco, url_marca, valor_preco_prazo, marca, loja))  # noqa
-    #             connection.commit()
+    # Chame a função para remover as marcas não listadas
+    remover_marcas_nao_listadas(DB_NAME, cursor, dic_produtos['marca'])
 
-    # cursor.close()
+    cursor.close()

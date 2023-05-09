@@ -10,8 +10,6 @@ class SearchCOOLERS(models.Model):
         max_digits=7, decimal_places=2, null=True)
     preco_antigo = models.DecimalField(
         max_digits=7, decimal_places=2, null=True)
-    ativo = models.DecimalField(
-        max_digits=7, decimal_places=2, default=0, null=True)
 
     def __str__(self):
         return self.marca + " "

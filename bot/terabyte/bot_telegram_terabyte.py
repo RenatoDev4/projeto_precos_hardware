@@ -1,8 +1,8 @@
 import re
 import sqlite3
 from typing import Any, Dict, List
+from urllib.parse import urlencode
 
-import cloudscraper
 import requests  # type: ignore
 from bs4 import BeautifulSoup
 
@@ -15,11 +15,25 @@ def web_scraping_terabyte(loja, url_pag, database):  # noqa
     DB_NAME = 'db.sqlite3'
     DB_FILE = DB_NAME
 
-    # Cria um objeto cloudscraper com a Session
-    scraper = cloudscraper.create_scraper()
+    # Configure o endpoint do proxy ScrapeOps e a sua chave de API
+    proxy_endpoint = 'https://proxy.scrapeops.io/v1/'
+    api_key = '56d522f7-9b15-402b-847e-a6ecdee88d11'
 
-    # Obtém o site com o Cloudscraper
-    response = scraper.get(url_pag)
+    # Configure os parâmetros para a solicitação
+    proxy_params = {
+        'api_key': api_key,
+        'url': url_pag,
+        'render_js': True,
+    }
+
+    # Faça a solicitação GET para a página da web através do proxy do ScrapeOps
+    response = requests.get(
+        url=proxy_endpoint,
+        params=urlencode(proxy_params),
+        timeout=120,
+    )
+
+    # Analise a resposta utilizando BeautifulSoup
     soup = BeautifulSoup(response.content, 'html.parser')
 
     dic_produtos: Dict[str, List[Any]] = {'marca': [], 'preco': [  # type: ignore # noqa

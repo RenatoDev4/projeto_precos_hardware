@@ -7,7 +7,10 @@
 }
 
 nav {
-  position: relative;
+  position: sticky;
+  top: 0; 
+  width: 100%; 
+  z-index: 1000; 
   background-color: #cc7722;
   align-items: center;
   border-bottom: 1px solid white;
@@ -210,14 +213,14 @@ tbody tr:hover {
 /* Estilos do rodapé */
 
 footer {
+  position: sticky;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   background-color: #cc7722;
   border-top: #ffffff 1px solid;
   color: #484d50;
   padding: 3px;
-  margin-top: 12px;
-  bottom: 0;
   width: 100%;
   font-family: 'Montserrat', sans-serif;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);

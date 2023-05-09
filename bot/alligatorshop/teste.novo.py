@@ -15,7 +15,7 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) \
             Chrome/109.0.0.0 Safari/537.36"}
-url_pag = 'https://www.alligatorshop.com.br/intel'
+url_pag = 'https://www.alligatorshop.com.br/placa-de-video'
 loja = 'Alligator Shop'
 
 # Database configuration
@@ -41,9 +41,8 @@ for produto in produto:
     if preco is not None:
         preco = preco.get_text().strip()
     else:
-        preco = 0.0
-    # Variable exclusive to 'message' to be sent to telegram
-    valor_preco_avista_str_msg = preco
+        preco = '0.0'
+
     valor_preco_avista_str = re.sub(
         r'[^\d,]', '', preco).replace(',', '.')   # type: ignore
     valor_preco_avista = float(valor_preco_avista_str)
@@ -51,7 +50,8 @@ for produto in produto:
     # Get produtct price (credit card)
     preco2 = produto.find('div', class_=re.compile('creditcard'))
     if preco2 is not None:
-        valor_preco_prazo_tag = preco2.find('span', class_='price total')
+        valor_preco_prazo_tag = preco2.find(
+            'span', class_='price total')
         valor_preco_prazo = valor_preco_prazo_tag.get_text(
         ).strip() if valor_preco_prazo_tag is not None else None
     else:
@@ -59,10 +59,10 @@ for produto in produto:
 
     if valor_preco_prazo:
         valor_preco_prazo_str = re.sub(
-            r'[^\d,.]', '', valor_preco_prazo).replace(',', '.').replace('.', '')
-        valor_preco_prazo_float = float(valor_preco_prazo_str) / 100
+            r'[^\d,.]', '', valor_preco_prazo).replace(',', '.').replace('.', '')  # noqa
+        valor_preco_prazo = float(valor_preco_prazo_str) / 100
     else:
-        valor_preco_prazo_float = 0.0
+        valor_preco_prazo = '0.0'
 
     # Get product url
     url_completa = produto.find('a')['href']
@@ -76,24 +76,23 @@ for produto in produto:
 
     # forwarding the data to the database
 
-    connection = sqlite3.connect(DB_FILE)
-    cursor = connection.cursor()
+    # connection = sqlite3.connect(DB_FILE)
+    # cursor = connection.cursor()
 
-    for i in range(len(dic_produtos['marca'])):
-        marca = dic_produtos['marca'][i]
-        preco = dic_produtos['preco'][i]
-        url_marca = dic_produtos['url_marca'][i]
-        loja = dic_produtos['loja'][i]
-        valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
-        cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
-                        (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-        result = cursor.fetchone()
-        if result is None:
-            if preco != 0:
-                cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
-                                (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
-                connection.commit()
-                cursor.close()
+    # for i in range(len(dic_produtos['marca'])):
+    #     marca = dic_produtos['marca'][i]
+    #     preco = dic_produtos['preco'][i]
+    #     url_marca = dic_produtos['url_marca'][i]
+    #     loja = dic_produtos['loja'][i]
+    #     valor_preco_prazo = dic_produtos['valor_preco_prazo'][i]
+    #     cursor.execute("SELECT * FROM placasdevideo_searchvga WHERE marca = ? AND preco = ? AND url_marca = ? AND loja = ? AND valor_preco_prazo = ?",  # noqa
+    #                     (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+    #     result = cursor.fetchone()
+    #     if result is None:
+    #         if preco != 0:
+    #             cursor.execute("INSERT INTO placasdevideo_searchvga (marca, preco, url_marca, loja, valor_preco_prazo) VALUES (?, ?, ?, ?, ?)",  # noqa
+    #                             (marca, preco, url_marca, loja, valor_preco_prazo))  # noqa
+    #             connection.commit()
+    #             cursor.close()
 
-    print(marca, valor_preco_avista_str_msg,
-          valor_preco_prazo_float,  url_completa)
+    print(marca, valor_preco_avista, valor_preco_prazo)

@@ -78,7 +78,7 @@ def web_scraping_pichau(loja, url_pag, database):  # noqa
             # remova todos os espaços em branco
             preco2 = re.sub(r'[^\d,]', '', preco2)
             preco2 = re.sub(r',', '.', preco2)
-            preco2 = round(float(preco2), 2)
+
         else:
             preco2 = 0.0
 

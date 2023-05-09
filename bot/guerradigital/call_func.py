@@ -2,7 +2,7 @@ from bot_telegram_guerradigital import web_scraping_guerradigital
 
 # ------------- SHOP NAME -----------------#
 
-SHOPNAME = 'GuerraDigital'
+SHOPNAME = 'Guerra Digital'
 
 # ------------- DATABASE NAMES -----------------#
 DATABASE_NAME_VGA = 'placasdevideo_searchvga'

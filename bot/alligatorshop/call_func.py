@@ -14,7 +14,7 @@ DATABASE_NAME_POWER_SUPPLY = 'fontes_searchpowersuply'
 DATABASE_NAME_COOLERS = 'coolers_searchcoolers'
 
 # ------------- URL NAME -----------------#
-URL_VGA = 'https://www.alligatorshop.com.br/placa-de-video?limit=48&page='
+URL_VGA = 'https://www.alligatorshop.com.br/placa-de-video?limit=36'
 URL_PROCESSOR = 'https://www.alligatorshop.com.br/processador?limit=36'
 URL_MEMORY = 'https://www.alligatorshop.com.br/memoria-ram?limit=36'
 URL_MOTHERBOARD = 'https://www.alligatorshop.com.br/placa-mae?limit=36'
@@ -24,8 +24,7 @@ URL_COOLERS = 'https://www.alligatorshop.com.br/refrigeracao'
 
 # ------------- VGA -----------------#
 
-web_scraping_alligatorshop(SHOPNAME, URL_VGA + '1', DATABASE_NAME_VGA)  # noqa
-web_scraping_alligatorshop(SHOPNAME, URL_VGA + '2', DATABASE_NAME_VGA)  # noqa
+web_scraping_alligatorshop(SHOPNAME, URL_VGA, DATABASE_NAME_VGA)  # noqa
 
 # ------------- Processadores -----------------#
 

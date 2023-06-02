@@ -1,0 +1,155 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+}
+nav{
+    background-color: black;
+    align-items: center;
+
+}
+nav a{
+    color: white;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    padding: 12px;
+    padding-left: 40px;
+    display: block;
+    text-transform: uppercase;
+    
+}
+nav ul{
+    display: flex;
+    list-style: none;
+}
+nav a:hover{
+    background: rgba(255, 250, 250, 0.3);
+}
+
+table{
+    border-collapse: collapse;
+    width: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
+    text-align: left;
+
+}
+
+#tabela-de-dados th:first-child,
+#tabela-de-dados th:nth-child(2),
+#tabela-de-dados th:nth-child(3),
+#tabela-de-dados th:nth-child(4)
+{
+  background-color: black;
+  color: white;
+  
+}
+
+#tabela-de-dados td:first-child,
+#tabela-de-dados td:nth-child(2),
+#tabela-de-dados td:nth-child(3),
+#tabela-de-dados td:nth-child(4)
+{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif ;
+    border: 1px solid black;
+}
+
+table a:link {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+table a:visited {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+table a:hover {
+    color: white;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  
+table a:active {
+    color: white;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+
+
+table caption{
+    caption-side: top;
+    text-align: left;
+    font-size: 15px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+}
+.filtros_formulario{
+    color: black;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    padding: 12px;
+    display: block;
+    text-transform: uppercase;
+    margin-top: 10px;
+    font-weight: bold;  
+
+}
+
+#tabela-principal {
+    width: 100%;
+    height: 100%;
+  }
+
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+  *, *:before, *:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: #105469;
+    font-family: 'Open Sans', sans-serif;
+  }
+  table {
+    background: #012B39;
+    border-radius: 0.25em;
+    border-collapse: collapse;
+  }
+  th {
+    border-bottom: 1px solid #364043;
+    color: #E2B842;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    text-align: left;
+  }
+  td {
+    color: #fff;
+    font-weight: 400;
+    padding: 0.65em 1em;
+  }
+  .disabled td {
+    color: #4F5F64;
+  }
+  tbody tr {
+    transition: background 0.25s ease;
+  }
+  tbody tr:hover {
+    background: #014055;
+  }
+  
+
+  

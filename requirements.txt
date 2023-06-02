@@ -14,10 +14,13 @@ cloudscraper==1.2.71
 constantly==15.1.0
 cryptography==40.0.2
 cssselect==1.2.0
+dj-database-url==2.0.0
 Django==4.2
+django-heroku==0.3.1
 exceptiongroup==1.1.1
 filelock==3.12.0
 greenlet==2.0.1
+gunicorn==20.1.0
 h11==0.14.0
 h2==4.1.0
 hpack==4.0.0
@@ -38,6 +41,7 @@ outcome==1.2.0
 packaging==23.1
 parsel==1.8.1
 Protego==0.2.1
+psycopg2==2.9.6
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 PyAutoGUI==0.9.53
@@ -82,5 +86,6 @@ undetected-chromedriver==3.4.6
 urllib3==1.26.15
 w3lib==2.1.1
 websockets==11.0.2
+whitenoise==6.4.0
 wsproto==1.2.0
 zope.interface==6.0

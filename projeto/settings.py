@@ -143,7 +143,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'renatodev4@gmail.com'
 EMAIL_HOST_PASSWORD = 'uugxxdpdsvimamtc'
-
-# Python Version
-
-PYTHON_VERSION = 3.10

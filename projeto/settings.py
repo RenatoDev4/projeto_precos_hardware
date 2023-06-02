@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
-import django_heroku
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +25,7 @@ SECRET_KEY = 'django-insecure-8)z-ez&*veyx8bz7_h7phx1c*r&zj)vckn&6jr)c&($ncz^xif
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['br-pc-ecommerce-best-prices.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -146,4 +144,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'renatodev4@gmail.com'
 EMAIL_HOST_PASSWORD = 'uugxxdpdsvimamtc'
 
-django_heroku.settings(locals())
+# Python Version
+
+PYTHON_VERSION = 3.10
